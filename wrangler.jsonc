@@ -1,7 +1,7 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "main": ".open-next/worker.js",
   "name": "unstory",
+  "main": ".open-next/worker.js",
   "compatibility_date": "2025-08-15",
   "compatibility_flags": [
     "nodejs_compat",
@@ -15,15 +15,35 @@
     {
       "binding": "D1",
       "database_id": "cfbc7936-17d6-4e1e-a70d-fe6297017c1e",
-      "database_name": "unstory",
-      "remote": true
+      "database_name": "unstory"
+    },
+    {
+      "binding": "NEXT_TAG_CACHE_D1",
+      "database_id": "cfbc7936-17d6-4e1e-a70d-fe6297017c1e",
+      "database_name": "unstory"
     }
   ],
-  "services": [],
   "r2_buckets": [
     {
       "binding": "R2",
       "bucket_name": "unstory"
+    },
+    {
+      "binding": "NEXT_INC_CACHE_R2_BUCKET",
+      "bucket_name": "unstory"
     }
-  ]
+  ],
+  "queues": {
+    "producers": [
+      {
+        "binding": "CONTENT_QUEUE",
+        "queue": "unstory-content-queue"
+      }
+    ]
+  },
+  "vars": {
+    "NODE_ENV": "production",
+    "NEXT_PUBLIC_SITE_URL": "https://unstory.app",
+    "ADMIN_PASSWORD": "PLACEHOLDER_CHANGE_ME"
+  }
 }
