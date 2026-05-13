@@ -1,0 +1,23 @@
+{
+  "name": "Unstory — Premium Internet Intelligence",
+  "short_name": "Unstory",
+  "description": "Premium intelligence for the wealth-minded. Money, AI, Power, and Luxury.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#FFFFFF",
+  "theme_color": "#E11D48",
+  "icons": [
+    {
+      "src": "/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

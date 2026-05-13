@@ -23,15 +23,31 @@ export const metadata: Metadata = {
   },
   description: SITE_CONFIG.description,
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://unstory.app"),
+  manifest: "/manifest.json",
+  themeColor: "#E11D48",
+  icons: {
+    icon: "/favicon.png",
+    shortcut: "/favicon.png",
+    apple: "/icon-512x512.png",
+  },
   openGraph: {
     type: "website",
     locale: SITE_CONFIG.locale,
     url: SITE_CONFIG.url,
     siteName: SITE_CONFIG.name,
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "Unstory — Premium Internet Intelligence",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     site: "@unstoryapp",
+    images: ["/og-image.png"],
   },
 };
 
