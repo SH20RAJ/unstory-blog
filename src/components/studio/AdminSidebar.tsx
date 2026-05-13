@@ -32,8 +32,8 @@ export function AdminSidebar() {
   ];
 
   return (
-    <aside className="w-64 border-r border-premium-border flex flex-col">
-      <div className="p-8 border-b border-premium-border">
+    <aside className="w-64 border-r border-un-border flex flex-col">
+      <div className="p-8 border-b border-un-border">
         <Link href="/" className="flex items-center space-x-2">
           <span className="text-xl font-serif font-bold text-white tracking-tighter">UNSTORY</span>
           <span className="text-[8px] uppercase tracking-widest text-brand font-bold bg-brand/10 px-1.5 py-0.5 rounded">CMS</span>
@@ -51,7 +51,7 @@ export function AdminSidebar() {
                 "flex items-center space-x-3 px-4 py-3 rounded-lg text-sm font-medium transition-all",
                 isActive 
                   ? "bg-brand/10 text-brand" 
-                  : "text-premium-muted hover:bg-premium-gray hover:text-white"
+                  : "text-un-muted hover:bg-un-surface hover:text-white"
               )}
             >
               <item.icon className="w-5 h-5" />
@@ -61,11 +61,11 @@ export function AdminSidebar() {
         })}
       </nav>
 
-      <div className="p-4 border-t border-premium-border space-y-2">
+      <div className="p-4 border-t border-un-border space-y-2">
         <Link 
           href="/" 
           target="_blank"
-          className="flex items-center space-x-3 px-4 py-3 rounded-lg text-sm font-medium text-premium-muted hover:bg-premium-gray hover:text-white transition-all"
+          className="flex items-center space-x-3 px-4 py-3 rounded-lg text-sm font-medium text-un-muted hover:bg-un-surface hover:text-white transition-all"
         >
           <ExternalLink className="w-5 h-5" />
           <span>View Website</span>

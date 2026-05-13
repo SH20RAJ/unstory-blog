@@ -19,10 +19,10 @@ export default async function TrendingPage() {
           <span className="text-[10px] uppercase tracking-[0.4em] text-brand font-bold">
             Real-time Intelligence
           </span>
-          <h1 className="text-5xl lg:text-7xl font-serif font-bold text-black tracking-tight">
+          <h1 className="text-5xl lg:text-7xl font-serif font-bold text-un-text tracking-tight">
             Trending Now
           </h1>
-          <p className="text-xl lg:text-2xl text-premium-muted font-serif leading-relaxed italic">
+          <p className="text-xl lg:text-2xl text-un-muted font-serif leading-relaxed italic">
             The stories and topics currently shaping the global landscape.
           </p>
         </div>
@@ -40,8 +40,8 @@ export default async function TrendingPage() {
           </div>
           
           {trendingArticles.length === 0 && (
-            <div className="py-20 text-center border-2 border-dashed border-premium-border rounded-2xl">
-              <p className="text-premium-muted font-serif italic text-lg">
+            <div className="py-20 text-center border-2 border-dashed border-un-border rounded-2xl">
+              <p className="text-un-muted font-serif italic text-lg">
                 No trending stories at the moment. Check back soon.
               </p>
             </div>

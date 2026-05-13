@@ -11,10 +11,10 @@ interface TrendingListProps {
 
 export function TrendingList({ topics }: TrendingListProps) {
   return (
-    <div className="bg-premium-gray rounded-xl p-8 border border-premium-border">
+    <div className="bg-un-surface rounded-xl p-8 border border-un-border">
       <div className="flex items-center space-x-3 mb-8">
         <TrendingUp className="w-5 h-5 text-brand" />
-        <h3 className="text-sm font-serif font-bold uppercase tracking-[0.2em] text-black">
+        <h3 className="text-sm font-serif font-bold uppercase tracking-[0.2em] text-un-text">
           Trending Intelligence
         </h3>
       </div>
@@ -26,7 +26,7 @@ export function TrendingList({ topics }: TrendingListProps) {
             </span>
             <div className="flex flex-col space-y-1">
               <Link href={`/topic/${topic.slug}`}>
-                <h4 className="text-lg font-serif font-medium text-black hover:text-brand transition-colors leading-tight">
+                <h4 className="text-lg font-serif font-medium text-un-text hover:text-brand transition-colors leading-tight">
                   {topic.name}
                 </h4>
               </Link>
@@ -38,7 +38,7 @@ export function TrendingList({ topics }: TrendingListProps) {
                       style={{ width: `${Math.min(topic.trendingScore, 100)}%` }} 
                     />
                   </div>
-                  <span className="text-[10px] text-premium-muted uppercase font-bold">Trending High</span>
+                  <span className="text-[10px] text-un-muted uppercase font-bold">Trending High</span>
                 </div>
               )}
             </div>
@@ -47,7 +47,7 @@ export function TrendingList({ topics }: TrendingListProps) {
       </div>
       <Link 
         href="/trending" 
-        className="block mt-10 pt-6 border-t border-premium-border text-center text-xs font-bold uppercase tracking-widest text-premium-muted hover:text-brand transition-colors"
+        className="block mt-10 pt-6 border-t border-un-border text-center text-xs font-bold uppercase tracking-widest text-un-muted hover:text-brand transition-colors"
       >
         View All Trends
       </Link>

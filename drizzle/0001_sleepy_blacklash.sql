@@ -1,0 +1,1 @@
+ALTER TABLE `articles` ADD `hero_image_url` text;

@@ -57,7 +57,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
     notFound();
   }
 
-  const { articles: article, categories: category, authors: author, media_assets: heroImage } = result;
+  const { articles: article, categories: category, authors: author } = result;
 
   // JSON-LD structured data for SEO
   const jsonLd = {
@@ -65,7 +65,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
     "@type": "NewsArticle",
     headline: article.title,
     description: article.seoDescription || article.excerpt,
-    image: heroImage?.publicUrl ? [heroImage.publicUrl] : [],
+    image: article.heroImageUrl ? [article.heroImageUrl] : [],
     datePublished: article.publishedAt?.toISOString?.() || article.createdAt?.toISOString?.(),
     dateModified: article.updatedAt?.toISOString?.() || article.createdAt?.toISOString?.(),
     author: author ? [{ "@type": "Person", name: author.name, url: `${SITE_CONFIG.url}/author/${author.slug}` }] : [],
@@ -98,7 +98,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
             </Badge>
           )}
           
-          <h1 className="text-4xl lg:text-6xl xl:text-7xl font-serif font-bold text-black leading-[1.1] tracking-tight">
+          <h1 className="text-4xl lg:text-6xl xl:text-7xl font-serif font-bold text-un-text leading-[1.1] tracking-tight">
             {article.title}
           </h1>
 
@@ -119,22 +119,15 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
       </header>
 
       {/* Hero Image */}
-      {heroImage?.publicUrl && (
+      {article.heroImageUrl && (
         <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-16 lg:mb-24">
           <div className="relative aspect-[21/9] overflow-hidden rounded-2xl premium-border shadow-2xl">
-            <Image
-              src={heroImage.publicUrl}
-              alt={heroImage.altText || article.title}
-              fill
-              priority
-              className="object-cover"
+            <img
+              src={article.heroImageUrl}
+              alt={article.title}
+              className="object-cover w-full h-full"
             />
           </div>
-          {heroImage.credit && (
-            <p className="text-[10px] text-premium-muted uppercase tracking-widest mt-4 text-right">
-              Photo by {heroImage.credit}
-            </p>
-          )}
         </div>
       )}
 
@@ -145,7 +138,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
           <div className="lg:col-span-8 lg:col-start-3 space-y-12">
             <ArticleBody content={article.body} />
             
-            <div className="pt-16 border-t border-premium-border">
+            <div className="pt-16 border-t border-un-border">
               {author && <AuthorByline author={author} />}
             </div>
           </div>

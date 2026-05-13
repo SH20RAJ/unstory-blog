@@ -5,41 +5,62 @@
   --font-serif: "Instrument Serif", serif;
   --font-sans: "Inter", sans-serif;
 
-  --color-brand: #E11D48; /* Red accent like Forbes */
-  --color-premium-dark: #FFFFFF; /* White background */
-  --color-premium-gray: #F8F8F8;
-  --color-premium-border: #E5E5E5;
-  --color-premium-text: #111111;
-  --color-premium-muted: #666666;
+  --color-brand: #E11D48;
+  
+  /* Adaptive tokens */
+  --color-un-bg: var(--un-bg);
+  --color-un-surface: var(--un-surface);
+  --color-un-border: var(--un-border);
+  --color-un-text: var(--un-text);
+  --color-un-muted: var(--un-muted);
+}
+
+:root {
+  --un-bg: #FFFFFF;
+  --un-surface: #F8F8F8;
+  --un-border: #E5E5E5;
+  --un-text: #111111;
+  --un-muted: #666666;
+}
+
+.dark {
+  --un-bg: #0A0A0A;
+  --un-surface: #141414;
+  --un-border: #262626;
+  --un-text: #F5F5F5;
+  --un-muted: #A3A3A3;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not(.light) {
+    --un-bg: #0A0A0A;
+    --un-surface: #141414;
+    --un-border: #262626;
+    --un-text: #F5F5F5;
+    --un-muted: #A3A3A3;
+  }
 }
 
 @layer base {
   body {
-    @apply bg-premium-dark text-premium-text font-sans antialiased;
+    @apply bg-un-bg text-un-text font-sans antialiased transition-colors duration-300;
   }
 
   h1, h2, h3, h4, h5, h6 {
-    @apply font-serif font-bold;
+    @apply font-serif font-bold text-un-text;
   }
 
   .prose-premium {
-    @apply prose prose-lg lg:prose-xl max-w-none prose-headings:font-serif prose-headings:font-bold prose-headings:text-black prose-p:text-premium-text prose-p:leading-relaxed prose-a:text-brand prose-a:no-underline hover:prose-a:underline prose-strong:text-black prose-blockquote:border-l-brand prose-blockquote:font-serif prose-blockquote:italic prose-img:rounded-none prose-img:shadow-xl;
-  }
-
-  .premium-gradient {
-    background: linear-gradient(135deg, #FFFFFF 0%, #F0F0F0 100%);
+    @apply prose prose-lg lg:prose-xl max-w-none prose-headings:font-serif prose-headings:font-bold prose-headings:text-un-text prose-p:text-un-text prose-p:leading-relaxed prose-a:text-brand prose-a:no-underline hover:prose-a:underline prose-strong:text-un-text prose-blockquote:border-l-brand prose-blockquote:font-serif prose-blockquote:italic prose-img:rounded-none prose-img:shadow-xl;
+    @apply dark:prose-invert;
   }
 
   .premium-border {
-    @apply border border-premium-border;
+    @apply border border-un-border;
   }
 
   .premium-card {
-    @apply bg-premium-dark border border-premium-border rounded-none overflow-hidden transition-all hover:border-brand/30;
-  }
-
-  .premium-link {
-    @apply transition-colors hover:text-brand underline decoration-brand/30 underline-offset-4;
+    @apply bg-un-bg border border-un-border rounded-none overflow-hidden transition-all hover:border-brand/30;
   }
 }
 
@@ -47,11 +68,13 @@
 ::-webkit-scrollbar {
   width: 8px;
 }
-
 ::-webkit-scrollbar-track {
-  @apply bg-premium-gray;
+    background: var(--color-un-surface);
+}
+::-webkit-scrollbar-thumb {
+  @apply bg-un-border rounded-full hover:bg-brand/30 transition-colors;
 }
 
-::-webkit-scrollbar-thumb {
-  @apply bg-premium-border rounded-full hover:bg-brand/30 transition-colors;
+.theme-toggle-btn {
+  @apply p-2 rounded-full hover:bg-un-surface transition-all active:scale-95;
 }

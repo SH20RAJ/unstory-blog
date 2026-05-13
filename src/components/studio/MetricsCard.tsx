@@ -22,14 +22,14 @@ export function MetricsCard({ label, value, icon: Icon, color }: MetricsCardProp
   };
 
   return (
-    <div className="p-6 rounded-xl bg-premium-gray border border-premium-border group hover:border-brand/30 transition-all">
+    <div className="p-6 rounded-xl bg-un-surface border border-un-border group hover:border-brand/30 transition-all">
       <div className="flex items-center justify-between mb-4">
         <div className={cn("p-2 rounded-lg", colors[color])}>
           <Icon className="w-5 h-5" />
         </div>
         <span className="text-3xl font-bold text-white tracking-tight">{value}</span>
       </div>
-      <p className="text-xs font-bold uppercase tracking-[0.2em] text-premium-muted">
+      <p className="text-xs font-bold uppercase tracking-[0.2em] text-un-muted">
         {label}
       </p>
     </div>

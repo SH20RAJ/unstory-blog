@@ -8,6 +8,13 @@
       "when": 1778647537431,
       "tag": "0000_tricky_speedball",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1778652462414,
+      "tag": "0001_sleepy_blacklash",
+      "breakpoints": true
     }
   ]
 }

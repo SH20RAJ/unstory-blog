@@ -13,9 +13,9 @@ interface BadgeProps {
 
 export function Badge({ children, variant = "default", className }: BadgeProps) {
   const variants = {
-    default: "bg-premium-border text-premium-text",
+    default: "bg-premium-border text-un-text",
     premium: "bg-brand/10 text-brand border border-brand/20",
-    outline: "border border-premium-border text-premium-muted",
+    outline: "border border-un-border text-un-muted",
     success: "bg-green-500/10 text-green-500 border border-green-500/20",
     warning: "bg-yellow-500/10 text-yellow-500 border border-yellow-500/20",
     error: "bg-red-500/10 text-red-500 border border-red-500/20",

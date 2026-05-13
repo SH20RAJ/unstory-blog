@@ -49,10 +49,10 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
           <span className="text-[10px] uppercase tracking-[0.4em] text-brand font-bold">
             Intelligence Category
           </span>
-          <h1 className="text-5xl lg:text-7xl font-serif font-bold text-black tracking-tight">
+          <h1 className="text-5xl lg:text-7xl font-serif font-bold text-un-text tracking-tight">
             {categoryResult.name}
           </h1>
-          <p className="text-xl lg:text-2xl text-premium-muted font-serif leading-relaxed italic">
+          <p className="text-xl lg:text-2xl text-un-muted font-serif leading-relaxed italic">
             {categoryResult.description}
           </p>
         </div>
@@ -84,8 +84,8 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
           </div>
           
           {articlesResult.length === 0 && (
-            <div className="py-20 text-center border-2 border-dashed border-premium-border rounded-2xl">
-              <p className="text-premium-muted font-serif italic text-lg">
+            <div className="py-20 text-center border-2 border-dashed border-un-border rounded-2xl">
+              <p className="text-un-muted font-serif italic text-lg">
                 Intelligence briefings are being prepared for this category.
               </p>
             </div>

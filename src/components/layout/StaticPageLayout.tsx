@@ -14,7 +14,7 @@ export function StaticPageLayout({ title, tagline, children }: StaticPageLayoutP
               {tagline}
             </span>
           )}
-          <h1 className="text-4xl lg:text-6xl font-serif font-bold text-black tracking-tight mb-8">
+          <h1 className="text-4xl lg:text-6xl font-serif font-bold text-un-text tracking-tight mb-8">
             {title}
           </h1>
           <div className="w-12 h-1 bg-brand mx-auto"></div>

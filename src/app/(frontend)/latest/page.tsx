@@ -23,7 +23,7 @@ export default async function LatestPage({ searchParams }: LatestPageProps) {
         <span className="text-[10px] uppercase tracking-[0.4em] text-brand font-bold">
           Intelligence Archive
         </span>
-        <h1 className="text-5xl lg:text-7xl font-serif font-bold text-black tracking-tight mt-4">
+        <h1 className="text-5xl lg:text-7xl font-serif font-bold text-un-text tracking-tight mt-4">
           Latest Briefings
         </h1>
       </header>

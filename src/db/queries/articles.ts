@@ -21,15 +21,11 @@ export function createArticlesQueries(db: any) {
             name: authors.name,
             avatarUrl: authors.avatarUrl,
           },
-          heroImage: {
-            publicUrl: mediaAssets.publicUrl,
-            altText: mediaAssets.altText,
-          },
+          heroImageUrl: articles.heroImageUrl,
         })
         .from(articles)
         .leftJoin(categories, eq(articles.categoryId, categories.id))
         .leftJoin(authors, eq(articles.authorId, authors.id))
-        .leftJoin(mediaAssets, eq(articles.heroImageId, mediaAssets.id))
         .where(eq(articles.status, "published"))
         .orderBy(desc(articles.publishedAt))
         .limit(limit)
@@ -42,7 +38,6 @@ export function createArticlesQueries(db: any) {
         .from(articles)
         .leftJoin(categories, eq(articles.categoryId, categories.id))
         .leftJoin(authors, eq(articles.authorId, authors.id))
-        .leftJoin(mediaAssets, eq(articles.heroImageId, mediaAssets.id))
         .where(eq(articles.slug, slug))
         .limit(1);
       
@@ -51,7 +46,20 @@ export function createArticlesQueries(db: any) {
 
     async getArticlesByCategory(categorySlug: string, limit = 10) {
       return db
-        .select()
+        .select({
+          id: articles.id,
+          title: articles.title,
+          slug: articles.slug,
+          excerpt: articles.excerpt,
+          status: articles.status,
+          contentType: articles.contentType,
+          publishedAt: articles.publishedAt,
+          category: {
+            name: categories.name,
+            slug: categories.slug,
+          },
+          heroImageUrl: articles.heroImageUrl,
+        })
         .from(articles)
         .innerJoin(categories, eq(articles.categoryId, categories.id))
         .where(and(eq(categories.slug, categorySlug), eq(articles.status, "published")))
@@ -61,7 +69,13 @@ export function createArticlesQueries(db: any) {
 
     async getTrendingArticles(limit = 5) {
       return db
-        .select()
+        .select({
+          id: articles.id,
+          title: articles.title,
+          slug: articles.slug,
+          publishedAt: articles.publishedAt,
+          heroImageUrl: articles.heroImageUrl,
+        })
         .from(articles)
         .where(and(eq(articles.status, "published"), eq(articles.isTrending, true)))
         .orderBy(desc(articles.publishedAt))

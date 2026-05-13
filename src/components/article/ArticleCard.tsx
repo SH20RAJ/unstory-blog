@@ -5,6 +5,8 @@ import { ArticleMeta } from "./ArticleMeta";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
+import { ImagePlaceholder } from "@/components/ui/ImagePlaceholder";
+
 function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
@@ -19,34 +21,28 @@ interface ArticleCardProps {
       name: string;
       slug: string;
     } | null;
-    heroImage?: {
-      publicUrl: string;
-      altText?: string | null;
-    } | null;
+    heroImageUrl?: string | null;
   };
   variant?: "default" | "minimal" | "compact";
   className?: string;
 }
 
 export function ArticleCard({ article, variant = "default", className }: ArticleCardProps) {
-  const { title, slug, excerpt, publishedAt, category, heroImage } = article;
+  const { title, slug, excerpt, publishedAt, category, heroImageUrl } = article;
 
   return (
     <article className={cn("group flex flex-col space-y-4", className)}>
       {/* Hero Image */}
       {variant !== "minimal" && (
         <Link href={`/article/${slug}`} className="block relative aspect-video overflow-hidden rounded-lg premium-border">
-          {heroImage?.publicUrl ? (
-            <Image
-              src={heroImage.publicUrl}
-              alt={heroImage.altText || title}
-              fill
-              className="object-cover transition-transform duration-500 group-hover:scale-105"
+          {heroImageUrl ? (
+            <img
+              src={heroImageUrl}
+              alt={title}
+              className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-105"
             />
           ) : (
-            <div className="w-full h-full bg-premium-gray flex items-center justify-center">
-              <span className="text-premium-border font-serif text-4xl font-bold tracking-tighter opacity-20">UNSTORY</span>
-            </div>
+            <ImagePlaceholder />
           )}
           {category && (
             <div className="absolute top-4 left-4">
@@ -66,7 +62,7 @@ export function ArticleCard({ article, variant = "default", className }: Article
         
         <Link href={`/article/${slug}`} className="block">
           <h3 className={cn(
-            "font-serif text-black group-hover:text-brand transition-colors leading-tight",
+            "font-serif text-un-text group-hover:text-brand transition-colors leading-tight",
             variant === "compact" ? "text-lg" : "text-2xl"
           )}>
             {title}
@@ -74,7 +70,7 @@ export function ArticleCard({ article, variant = "default", className }: Article
         </Link>
 
         {variant === "default" && excerpt && (
-          <p className="text-premium-muted text-sm line-clamp-2 leading-relaxed">
+          <p className="text-un-muted text-sm line-clamp-2 leading-relaxed">
             {excerpt}
           </p>
         )}

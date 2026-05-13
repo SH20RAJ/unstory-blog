@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { Badge } from "@/components/ui/Badge";
 import { ArticleMeta } from "./ArticleMeta";
+import { ImagePlaceholder } from "@/components/ui/ImagePlaceholder";
 
 interface FeaturedArticleProps {
   article: {
@@ -14,10 +15,7 @@ interface FeaturedArticleProps {
       name: string;
       slug: string;
     } | null;
-    heroImage?: {
-      publicUrl: string;
-      altText?: string | null;
-    } | null;
+    heroImageUrl?: string | null;
     author?: {
       name: string;
       avatarUrl?: string | null;
@@ -26,10 +24,10 @@ interface FeaturedArticleProps {
 }
 
 export function FeaturedArticle({ article }: FeaturedArticleProps) {
-  const { title, slug, subtitle, excerpt, publishedAt, category, heroImage, author } = article;
+  const { title, slug, subtitle, excerpt, publishedAt, category, heroImageUrl, author } = article;
 
   return (
-    <div className="relative group overflow-hidden rounded-xl premium-border bg-premium-gray">
+    <div className="relative group overflow-hidden rounded-xl premium-border bg-un-surface">
       <div className="grid grid-cols-1 lg:grid-cols-2">
         {/* Content Side */}
         <div className="p-8 lg:p-12 flex flex-col justify-center order-2 lg:order-1">
@@ -41,7 +39,7 @@ export function FeaturedArticle({ article }: FeaturedArticleProps) {
             )}
             
             <Link href={`/article/${slug}`} className="block">
-              <h2 className="text-4xl lg:text-5xl xl:text-6xl font-serif font-bold text-black leading-[1.1] group-hover:text-brand transition-colors">
+              <h2 className="text-4xl lg:text-5xl xl:text-6xl font-serif font-bold text-un-text leading-[1.1] group-hover:text-brand transition-colors">
                 {title}
               </h2>
             </Link>
@@ -53,7 +51,7 @@ export function FeaturedArticle({ article }: FeaturedArticleProps) {
             )}
 
             {excerpt && (
-              <p className="text-premium-muted text-lg leading-relaxed max-w-xl">
+              <p className="text-un-muted text-lg leading-relaxed max-w-xl">
                 {excerpt}
               </p>
             )}
@@ -64,11 +62,11 @@ export function FeaturedArticle({ article }: FeaturedArticleProps) {
                   {author.avatarUrl ? (
                     <Image src={author.avatarUrl} alt={author.name} width={40} height={40} className="rounded-full" />
                   ) : (
-                    <div className="w-10 h-10 rounded-full bg-premium-border flex items-center justify-center text-xs font-bold text-premium-muted">
+                    <div className="w-10 h-10 rounded-full bg-premium-border flex items-center justify-center text-xs font-bold text-un-muted">
                       {author.name.charAt(0)}
                     </div>
                   )}
-                  <span className="text-sm font-medium text-black">{author.name}</span>
+                  <span className="text-sm font-medium text-un-text">{author.name}</span>
                 </div>
               )}
               <ArticleMeta date={publishedAt} className="text-base" />
@@ -78,18 +76,14 @@ export function FeaturedArticle({ article }: FeaturedArticleProps) {
 
         {/* Image Side */}
         <Link href={`/article/${slug}`} className="relative aspect-square lg:aspect-auto h-full overflow-hidden order-1 lg:order-2">
-          {heroImage?.publicUrl ? (
-            <Image
-              src={heroImage.publicUrl}
-              alt={heroImage.altText || title}
-              fill
-              priority
-              className="object-cover transition-transform duration-700 group-hover:scale-105"
+          {heroImageUrl ? (
+            <img
+              src={heroImageUrl}
+              alt={title}
+              className="object-cover w-full h-full transition-transform duration-700 group-hover:scale-105"
             />
           ) : (
-            <div className="w-full h-full bg-white flex items-center justify-center">
-              <span className="text-premium-border font-serif text-8xl font-bold tracking-tighter opacity-10">UNSTORY</span>
-            </div>
+            <ImagePlaceholder text="UNSTORY FEATURED" />
           )}
           <div className="absolute inset-0 bg-gradient-to-t from-premium-dark/60 to-transparent lg:hidden" />
         </Link>

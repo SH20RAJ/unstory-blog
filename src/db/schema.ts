@@ -124,6 +124,7 @@ export const articles = sqliteTable("articles", {
   categoryId: text("category_id").references(() => categories.id),
   authorId: text("author_id").references(() => authors.id),
   heroImageId: text("hero_image_id").references(() => mediaAssets.id),
+  heroImageUrl: text("hero_image_url"),
   canonicalUrl: text("canonical_url"),
   sourceUrl: text("source_url"),
   language: text("language").default("en"),

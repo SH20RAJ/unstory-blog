@@ -2,13 +2,13 @@
 
 export function NewsletterBlock() {
   return (
-    <div className="relative overflow-hidden rounded-2xl bg-premium-gray premium-border p-8 lg:p-12 text-center">
+    <div className="relative overflow-hidden rounded-2xl bg-un-surface premium-border p-8 lg:p-12 text-center">
       <div className="relative z-10 max-w-2xl mx-auto space-y-6">
         <span className="text-[10px] uppercase tracking-[0.4em] text-brand font-bold">The Unstory Briefing</span>
-        <h2 className="text-3xl lg:text-5xl font-serif font-bold text-black leading-tight">
+        <h2 className="text-3xl lg:text-5xl font-serif font-bold text-un-text leading-tight">
           Intelligence for the wealth-minded.
         </h2>
-        <p className="text-premium-muted text-lg lg:text-xl">
+        <p className="text-un-muted text-lg lg:text-xl">
           Get weekly insights on money, AI, power, and high-income skills delivered directly to your inbox.
         </p>
         
@@ -16,7 +16,7 @@ export function NewsletterBlock() {
           <input
             type="email"
             placeholder="Enter your email"
-            className="flex-grow px-6 py-4 rounded-lg bg-white border border-premium-border text-black placeholder:text-premium-muted focus:outline-none focus:border-brand/50 transition-all"
+            className="flex-grow px-6 py-4 rounded-lg bg-un-bg border border-un-border text-un-text placeholder:text-un-muted focus:outline-none focus:border-brand/50 transition-all"
             required
           />
           <button
@@ -27,7 +27,7 @@ export function NewsletterBlock() {
           </button>
         </form>
         
-        <p className="text-[10px] text-premium-muted uppercase tracking-widest">
+        <p className="text-[10px] text-un-muted uppercase tracking-widest">
           No spam. Only high-value attention.
         </p>
       </div>

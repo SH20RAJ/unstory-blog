@@ -17,7 +17,7 @@ export function ArticleMeta({ date, readTime, className }: ArticleMetaProps) {
   if (!date) return null;
 
   return (
-    <div className={cn("flex items-center space-x-4 text-xs tracking-widest uppercase font-semibold text-premium-muted", className)}>
+    <div className={cn("flex items-center space-x-4 text-xs tracking-widest uppercase font-semibold text-un-muted", className)}>
       <div className="flex items-center space-x-1.5">
         <Calendar className="w-3 h-3" />
         <span>{format(date, "MMM dd, yyyy")}</span>
