@@ -24,6 +24,12 @@
       "database_name": "unstory"
     }
   ],
+  "observability": {
+    "logs": {
+      "enabled": false,
+      "invocation_logs": true
+    }
+  },
   "r2_buckets": [
     {
       "binding": "R2",

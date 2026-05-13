@@ -30,7 +30,7 @@
   }
 
   .premium-card {
-    @apply bg-premium-gray premium-border rounded-lg overflow-hidden transition-all hover:border-brand/50;
+    @apply bg-premium-gray border border-premium-border rounded-lg overflow-hidden transition-all hover:border-brand/50;
   }
 
   .premium-link {

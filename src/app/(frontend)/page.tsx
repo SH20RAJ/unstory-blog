@@ -61,10 +61,7 @@ export default async function HomePage() {
         </aside>
       </div>
 
-      {/* Newsletter */}
-      <section>
-        <NewsletterBlock />
-      </section>
+
 
       {/* Bottom Categories */}
       <div className="space-y-20">
