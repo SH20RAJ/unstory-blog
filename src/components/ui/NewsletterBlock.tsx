@@ -1,3 +1,5 @@
+"use client";
+
 export function NewsletterBlock() {
   return (
     <div className="relative overflow-hidden rounded-2xl bg-premium-gray premium-border p-8 lg:p-12 text-center">
