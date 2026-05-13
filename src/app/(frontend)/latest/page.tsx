@@ -5,12 +5,13 @@ import { Pagination } from "@/components/ui/Pagination";
 export const dynamic = "force-dynamic";
 
 interface LatestPageProps {
-  searchParams: { page?: string };
+  searchParams: Promise<{ page?: string }>;
 }
 
 export default async function LatestPage({ searchParams }: LatestPageProps) {
+  const { page: pageParam } = await searchParams;
   const { queries } = await getDb();
-  const page = parseInt(searchParams.page || "1");
+  const page = parseInt(pageParam || "1");
   const limit = 20;
   const offset = (page - 1) * limit;
 

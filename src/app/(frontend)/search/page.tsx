@@ -5,11 +5,12 @@ import { SearchInput } from "@/components/ui/SearchInput";
 export const dynamic = "force-dynamic";
 
 interface SearchPageProps {
-  searchParams: { q?: string };
+  searchParams: Promise<{ q?: string }>;
 }
 
 export default async function SearchPage({ searchParams }: SearchPageProps) {
-  const query = searchParams.q || "";
+  const { q } = await searchParams;
+  const query = q || "";
   const { queries } = await getDb();
   
   const results = query 

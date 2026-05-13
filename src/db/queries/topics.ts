@@ -1,4 +1,4 @@
-import { eq, desc, and } from "drizzle-orm";
+import { eq, desc, or, like } from "drizzle-orm";
 import { topics } from "../schema";
 
 export function createTopicsQueries(db: any) {

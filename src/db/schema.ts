@@ -1,5 +1,5 @@
 import { sql } from "drizzle-orm";
-import { sqliteTable, text, integer, index, uniqueIndex } from "drizzle-orm/sqlite-core";
+import { sqliteTable, text, integer, index, uniqueIndex, primaryKey, type AnySQLiteTable } from "drizzle-orm/sqlite-core";
 
 // ============================================
 // Authors
@@ -25,7 +25,7 @@ export const categories = sqliteTable("categories", {
   name: text("name").notNull(),
   slug: text("slug").notNull().unique(),
   description: text("description"),
-  parentId: text("parent_id").references(() => categories.id),
+  parentId: text("parent_id").references((): AnySQLiteTable => categories.id),
   priority: integer("priority").default(0),
   navLabel: text("nav_label"),
   color: text("color"),
@@ -182,5 +182,4 @@ export const articleSources = sqliteTable("article_sources", {
   pk: primaryKey({ columns: [table.articleId, table.sourceId] }),
 }));
 
-// Helper for primary keys in junction tables (since drizzle-orm/sqlite-core needs specific import)
-import { primaryKey } from "drizzle-orm/sqlite-core";
+// End of schema

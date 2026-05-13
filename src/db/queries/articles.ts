@@ -1,5 +1,5 @@
-import { eq, desc, and, or, like, sql } from "drizzle-orm";
-import { articles, authors, categories, mediaAssets, articleTopics, topics } from "../schema";
+import { eq, desc, and, or, like } from "drizzle-orm";
+import { articles, authors, categories, mediaAssets } from "../schema";
 
 export function createArticlesQueries(db: any) {
   return {
@@ -100,7 +100,7 @@ export function createArticlesQueries(db: any) {
     },
 
     async getAdminArticles(status?: string, categoryId?: string, limit = 50) {
-      let conditions = [];
+      const conditions = [];
       if (status) conditions.push(eq(articles.status, status));
       if (categoryId) conditions.push(eq(articles.categoryId, categoryId));
       

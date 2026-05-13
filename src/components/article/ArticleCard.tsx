@@ -1,6 +1,5 @@
 import Link from "next/link";
 import Image from "next/image";
-import { format } from "date-fns";
 import { Badge } from "@/components/ui/Badge";
 import { ArticleMeta } from "./ArticleMeta";
 import { clsx, type ClassValue } from "clsx";

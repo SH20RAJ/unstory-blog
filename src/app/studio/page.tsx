@@ -1,6 +1,6 @@
 import { getDb } from "@/lib/db";
 import { MetricsCard } from "@/components/studio/MetricsCard";
-import { FileText, Layers, Tag, TrendingUp, Clock, AlertCircle } from "lucide-react";
+import { FileText, TrendingUp, Clock, AlertCircle } from "lucide-react";
 
 export const dynamic = "force-dynamic";
 
@@ -13,9 +13,9 @@ export default async function AdminDashboard() {
   const categoriesCount = await db.select().from(schema.categories);
   const topicsCount = await db.select().from(schema.topics);
   
-  const drafts = articlesCount.filter(a => a.status === "draft").length;
-  const published = articlesCount.filter(a => a.status === "published").length;
-  const needsReview = articlesCount.filter(a => a.status === "needs_review").length;
+  const drafts = articlesCount.filter((a: any) => a.status === "draft").length;
+  const published = articlesCount.filter((a: any) => a.status === "published").length;
+  const needsReview = articlesCount.filter((a: any) => a.status === "needs_review").length;
 
   return (
     <div className="space-y-12">

@@ -7,19 +7,20 @@ import { TopicPill } from "@/components/category/TopicPill";
 export const dynamic = "force-dynamic";
 
 interface CategoryPageProps {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }
 
 export default async function CategoryPage({ params }: CategoryPageProps) {
+  const { slug } = await params;
   const { queries } = await getDb();
   
-  const categoryResult = await queries.categories.getCategoryWithChildren(params.slug);
+  const categoryResult = await queries.categories.getCategoryWithChildren(slug);
   if (!categoryResult) {
     notFound();
   }
 
   const [articlesResult, trendingTopics] = await Promise.all([
-    queries.articles.getArticlesByCategory(params.slug, 20),
+    queries.articles.getArticlesByCategory(slug, 20),
     queries.topics.getTrendingTopics(5),
   ]);
 

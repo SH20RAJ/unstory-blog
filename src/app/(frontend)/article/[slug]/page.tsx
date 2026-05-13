@@ -11,12 +11,13 @@ import { Metadata } from "next";
 export const dynamic = "force-dynamic";
 
 interface ArticlePageProps {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }
 
 export async function generateMetadata({ params }: ArticlePageProps): Promise<Metadata> {
+  const { slug } = await params;
   const { queries } = await getDb();
-  const result = await queries.articles.getArticleBySlug(params.slug);
+  const result = await queries.articles.getArticleBySlug(slug);
   
   if (!result) return {};
 
@@ -34,8 +35,9 @@ export async function generateMetadata({ params }: ArticlePageProps): Promise<Me
 }
 
 export default async function ArticlePage({ params }: ArticlePageProps) {
+  const { slug } = await params;
   const { queries } = await getDb();
-  const result = await queries.articles.getArticleBySlug(params.slug);
+  const result = await queries.articles.getArticleBySlug(slug);
 
   if (!result) {
     notFound();

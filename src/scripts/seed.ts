@@ -1,12 +1,19 @@
 import { drizzle } from "drizzle-orm/d1";
 import { CATEGORIES } from "../config";
 import * as schema from "../db/schema";
+import { getPlatformProxy } from "wrangler";
 
-// This script is intended to be run via `tsx` for local seeding
-// or as part of a more complex pipeline.
-// For D1, we usually use wrangler commands, but this ORM-based seed is helpful.
+async function main() {
+  console.log("Starting seed...");
+  
+  // Get local D1 proxy
+  const proxy = await getPlatformProxy();
+  const d1 = proxy.env.D1 as unknown as D1Database;
 
-export async function seed(d1: D1Database) {
+  if (!d1) {
+    throw new Error("Could not find D1 database binding.");
+  }
+
   const db = drizzle(d1, { schema });
   
   console.log("Seeding categories...");
@@ -60,4 +67,10 @@ export async function seed(d1: D1Database) {
   }).onConflictDoNothing();
 
   console.log("Seed complete!");
+  process.exit(0);
 }
+
+main().catch((err) => {
+  console.error("Seed failed:", err);
+  process.exit(1);
+});

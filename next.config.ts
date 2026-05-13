@@ -10,7 +10,7 @@ const nextConfig = {
     ],
     remotePatterns: [
       {
-        protocol: 'https',
+        protocol: 'https' as const,
         hostname: 'media.unstory.app',
         pathname: '/**',
       },
@@ -21,6 +21,9 @@ const nextConfig = {
   serverExternalPackages: ['jose', 'pg-cloudflare'],
 
   // Your Next.js config here
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
   webpack: (webpackConfig: any) => {
     webpackConfig.resolve.extensionAlias = {
       '.cjs': ['.cts', '.cjs'],

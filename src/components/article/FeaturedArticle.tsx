@@ -2,7 +2,6 @@ import Link from "next/link";
 import Image from "next/image";
 import { Badge } from "@/components/ui/Badge";
 import { ArticleMeta } from "./ArticleMeta";
-import { AuthorByline } from "./AuthorByline";
 
 interface FeaturedArticleProps {
   article: {

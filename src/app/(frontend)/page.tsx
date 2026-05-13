@@ -45,12 +45,12 @@ export default async function HomePage() {
           <CategorySection 
             title="Artificial Intelligence" 
             slug="ai" 
-            articles={aiArticles.map(a => a.articles)} 
+            articles={aiArticles.map((a: any) => a.articles)} 
           />
           <CategorySection 
             title="Wealth & Markets" 
             slug="wealth" 
-            articles={wealthArticles.map(a => a.articles)} 
+            articles={wealthArticles.map((a: any) => a.articles)} 
           />
         </div>
         
@@ -71,12 +71,12 @@ export default async function HomePage() {
         <CategorySection 
           title="Business & Operations" 
           slug="business" 
-          articles={businessArticles.map(a => a.articles)} 
+          articles={businessArticles.map((a: any) => a.articles)} 
         />
         <CategorySection 
           title="Power & Geopolitics" 
           slug="power" 
-          articles={powerArticles.map(a => a.articles)} 
+          articles={powerArticles.map((a: any) => a.articles)} 
         />
       </div>
     </div>

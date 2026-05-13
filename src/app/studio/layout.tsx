@@ -1,4 +1,3 @@
-import { redirect } from "next/navigation";
 import { isAdminAuthenticated } from "@/lib/auth";
 import { AdminSidebar } from "@/components/studio/AdminSidebar";
 

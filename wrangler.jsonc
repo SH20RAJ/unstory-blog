@@ -15,7 +15,8 @@
     {
       "binding": "D1",
       "database_id": "cfbc7936-17d6-4e1e-a70d-fe6297017c1e",
-      "database_name": "unstory"
+      "database_name": "unstory",
+      "migrations_dir": "drizzle"
     },
     {
       "binding": "NEXT_TAG_CACHE_D1",
@@ -31,6 +32,13 @@
     {
       "binding": "NEXT_INC_CACHE_R2_BUCKET",
       "bucket_name": "unstory"
+    }
+  ],
+  // route domain 
+  "routes": [
+    {
+      "pattern": "unstory.app/*",
+      "zone_name": "unstory.app"
     }
   ],
   "queues": {
