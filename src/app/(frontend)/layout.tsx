@@ -16,6 +16,12 @@ const instrumentSerif = Instrument_Serif({
   variable: "--font-serif",
 });
 
+export const viewport = {
+  themeColor: "#E11D48",
+  width: "device-width",
+  initialScale: 1,
+};
+
 export const metadata: Metadata = {
   title: {
     default: `${SITE_CONFIG.name} — ${SITE_CONFIG.tagline}`,
@@ -24,7 +30,6 @@ export const metadata: Metadata = {
   description: SITE_CONFIG.description,
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://unstory.app"),
   manifest: "/manifest.json",
-  themeColor: "#E11D48",
   icons: {
     icon: "/favicon.png",
     shortcut: "/favicon.png",
