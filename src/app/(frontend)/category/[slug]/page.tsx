@@ -75,10 +75,10 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
         <div className="lg:col-span-8">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-16">
-            {articlesResult.map((result: any) => (
+            {articlesResult.map((article: any) => (
               <ArticleCard 
-                key={result.articles.slug} 
-                article={result.articles} 
+                key={article.slug} 
+                article={article} 
               />
             ))}
           </div>

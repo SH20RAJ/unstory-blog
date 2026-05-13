@@ -69,6 +69,9 @@ export function SiteFooter() {
             <Link href="/advertise" className="text-xs text-un-muted hover:text-un-text transition-colors">
               Advertise
             </Link>
+            <Link href="/rss.xml" className="text-xs text-un-muted hover:text-un-text transition-colors">
+              RSS Feed
+            </Link>
           </div>
         </div>
       </div>
