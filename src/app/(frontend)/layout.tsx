@@ -63,6 +63,33 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${inter.variable} ${instrumentSerif.variable}`}>
+      <head>
+        <meta name="google-adsense-account" content="ca-pub-1828915420581549" />
+        <script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1828915420581549"
+          crossOrigin="anonymous"
+        ></script>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                try {
+                  var theme = localStorage.getItem('theme');
+                  var supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+                  if (!theme && supportDarkMode) theme = 'dark';
+                  if (!theme) theme = 'light';
+                  if (theme === 'dark') {
+                    document.documentElement.classList.add('dark');
+                  } else {
+                    document.documentElement.classList.remove('dark');
+                  }
+                } catch (e) {}
+              })();
+            `,
+          }}
+        />
+      </head>
       <body className="min-h-screen flex flex-col bg-un-bg text-un-text">
         <SiteHeader />
         <main className="flex-grow">
