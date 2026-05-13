@@ -105,6 +105,29 @@ export default function IndexNowPage() {
           >
             {loading ? "Fetching..." : "Submit All Articles"}
           </button>
+          <button
+            onClick={async () => {
+              setLoading(true);
+              setMessage(null);
+              try {
+                const res = await fetch("/api/indexnow");
+                const data = await res.json();
+                if (data.success) {
+                  setMessage({ type: "success", text: `Successfully submitted ${data.count} URLs from sitemap.` });
+                } else {
+                  setMessage({ type: "error", text: data.error || "Failed to sync sitemap." });
+                }
+              } catch (err) {
+                setMessage({ type: "error", text: "Failed to fetch sitemap." });
+              } finally {
+                setLoading(false);
+              }
+            }}
+            disabled={loading}
+            className="sm:col-span-2 border-2 border-brand text-brand px-6 py-4 font-bold hover:bg-brand hover:text-white transition-all disabled:opacity-50 uppercase tracking-widest text-xs"
+          >
+            {loading ? "Syncing..." : "Fetch & Submit from Sitemap.xml"}
+          </button>
         </div>
 
         {message && (

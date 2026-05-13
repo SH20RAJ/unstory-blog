@@ -5,6 +5,7 @@ import { useState } from "react";
 import { HEADER_NAV, SITE_CONFIG } from "@config";
 import { Search, Menu, X } from "lucide-react";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
+import { SearchInput } from "@/components/ui/SearchInput";
 
 export function SiteHeader() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -37,9 +38,18 @@ export function SiteHeader() {
 
           {/* Search & Mobile Menu Button */}
           <div className="flex items-center space-x-4">
-            <button className="p-2 text-un-muted hover:text-un-text transition-colors">
-              <Search className="w-5 h-5" />
-            </button>
+            <div className="hidden sm:block">
+              <SearchInput className="w-64" />
+            </div>
+            <div className="sm:hidden">
+               {/* Mobile search button could trigger a modal or just show the input */}
+               <button 
+                 className="p-2 text-un-muted hover:text-un-text transition-colors"
+                 onClick={() => setIsMenuOpen(true)}
+               >
+                 <Search className="w-5 h-5" />
+               </button>
+            </div>
             <ThemeToggle />
             <button 
               className="lg:hidden p-2 text-un-muted hover:text-un-text transition-colors"
@@ -55,6 +65,9 @@ export function SiteHeader() {
       {isMenuOpen && (
         <div className="lg:hidden fixed inset-0 top-20 z-40 bg-un-bg/95 backdrop-blur-xl h-[calc(100vh-5rem)] overflow-y-auto">
           <nav className="flex flex-col space-y-6 p-8">
+            <div className="mb-4">
+              <SearchInput className="w-full" />
+            </div>
             {HEADER_NAV.map((item) => (
               <Link
                 key={item.href}

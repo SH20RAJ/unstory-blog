@@ -123,7 +123,6 @@ export const articles = sqliteTable("articles", {
   contentType: text("content_type").notNull().default("news"), // news, analysis, explainer, opinion, roundup, fact_check, interview, review, guide
   categoryId: text("category_id").references(() => categories.id),
   authorId: text("author_id").references(() => authors.id),
-  heroImageId: text("hero_image_id").references(() => mediaAssets.id),
   heroImageUrl: text("hero_image_url"),
   canonicalUrl: text("canonical_url"),
   sourceUrl: text("source_url"),

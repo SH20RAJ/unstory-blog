@@ -1,8 +1,23 @@
-import { eq, desc, and, or, like } from "drizzle-orm";
+import { eq, desc, and, or, like, not, count } from "drizzle-orm";
 import { articles, authors, categories, mediaAssets } from "../schema";
 
 export function createArticlesQueries(db: any) {
   return {
+    async getArticleCount(status = "published", categorySlug?: string) {
+      let q = db.select({ value: count() }).from(articles);
+      const conditions = [eq(articles.status, status)];
+      
+      if (categorySlug) {
+        const cat = await db.select().from(categories).where(eq(categories.slug, categorySlug)).limit(1);
+        if (cat[0]) {
+          conditions.push(eq(articles.categoryId, cat[0].id));
+        }
+      }
+      
+      const res = await q.where(and(...conditions));
+      return res[0]?.value || 0;
+    },
+
     async getPublishedArticles(limit = 10, offset = 0) {
       return db
         .select({
@@ -44,7 +59,7 @@ export function createArticlesQueries(db: any) {
       return results[0] || null;
     },
 
-    async getArticlesByCategory(categorySlug: string, limit = 10) {
+    async getArticlesByCategory(categorySlug: string, limit = 10, offset = 0) {
       return db
         .select({
           id: articles.id,
@@ -63,6 +78,35 @@ export function createArticlesQueries(db: any) {
         .from(articles)
         .innerJoin(categories, eq(articles.categoryId, categories.id))
         .where(and(eq(categories.slug, categorySlug), eq(articles.status, "published")))
+        .orderBy(desc(articles.publishedAt))
+        .limit(limit)
+        .offset(offset);
+    },
+
+    async getRelatedArticles(currentSlug: string, categoryId: string | null, limit = 3) {
+      if (!categoryId) return [];
+      
+      return db
+        .select({
+          id: articles.id,
+          title: articles.title,
+          slug: articles.slug,
+          publishedAt: articles.publishedAt,
+          heroImageUrl: articles.heroImageUrl,
+          category: {
+            name: categories.name,
+            slug: categories.slug,
+          }
+        })
+        .from(articles)
+        .leftJoin(categories, eq(articles.categoryId, categories.id))
+        .where(
+          and(
+            eq(articles.categoryId, categoryId),
+            eq(articles.status, "published"),
+            not(eq(articles.slug, currentSlug))
+          )
+        )
         .orderBy(desc(articles.publishedAt))
         .limit(limit);
     },

@@ -22,6 +22,7 @@ export const HEADER_NAV: NavItem[] = [
   { label: "Lifestyle", href: "/category/lifestyle" },
   { label: "Skills", href: "/category/skills" },
   { label: "Trends", href: "/category/trends" },
+  { label: "Archive", href: "/blogs" },
 ];
 
 /** Footer link sections */
@@ -29,7 +30,7 @@ export const FOOTER_SECTIONS: FooterSection[] = [
   {
     title: "Intelligence",
     links: [
-      { label: "Latest", href: "/latest" },
+      { label: "Archive", href: "/blogs" },
       { label: "Trending", href: "/trending" },
       { label: "Wealth", href: "/category/wealth" },
       { label: "AI", href: "/category/ai" },

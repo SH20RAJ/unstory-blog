@@ -5,11 +5,13 @@ import { TrendingList } from "@/components/category/TrendingList";
 import { TopicPill } from "@/components/category/TopicPill";
 import { Metadata } from "next";
 import { SITE_CONFIG } from "@config";
+import { Pagination } from "@/components/ui/Pagination";
 
 export const dynamic = "force-dynamic";
 
 interface CategoryPageProps {
   params: Promise<{ slug: string }>;
+  searchParams: Promise<{ page?: string }>;
 }
 
 export async function generateMetadata({ params }: CategoryPageProps): Promise<Metadata> {
@@ -27,8 +29,13 @@ export async function generateMetadata({ params }: CategoryPageProps): Promise<M
   };
 }
 
-export default async function CategoryPage({ params }: CategoryPageProps) {
+export default async function CategoryPage({ params, searchParams }: CategoryPageProps) {
   const { slug } = await params;
+  const { page } = await searchParams;
+  const currentPage = parseInt(page || "1", 10);
+  const limit = 12;
+  const offset = (currentPage - 1) * limit;
+
   const { queries } = await getDb();
   
   const categoryResult = await queries.categories.getCategoryWithChildren(slug);
@@ -36,10 +43,13 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
     notFound();
   }
 
-  const [articlesResult, trendingTopics] = await Promise.all([
-    queries.articles.getArticlesByCategory(slug, 20),
+  const [articlesResult, trendingTopics, totalCount] = await Promise.all([
+    queries.articles.getArticlesByCategory(slug, limit, offset),
     queries.topics.getTrendingTopics(5),
+    queries.articles.getArticleCount("published", slug),
   ]);
+
+  const totalPages = Math.ceil(totalCount / limit);
 
   return (
     <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-20">
@@ -90,6 +100,12 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
               </p>
             </div>
           )}
+
+          <Pagination 
+            currentPage={currentPage} 
+            totalPages={totalPages} 
+            baseUrl={`/category/${slug}`} 
+          />
         </div>
 
         <aside className="lg:col-span-4">

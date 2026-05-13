@@ -10,34 +10,33 @@ export function ThemeToggle() {
   useEffect(() => {
     setMounted(true);
     const savedTheme = localStorage.getItem("theme") as "light" | "dark" | null;
-    if (savedTheme) {
-      setTheme(savedTheme);
-      document.documentElement.classList.toggle("dark", savedTheme === "dark");
-    } else if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
-      setTheme("dark");
-      document.documentElement.classList.add("dark");
-    }
+    const isDark = savedTheme === "dark" || (!savedTheme && window.matchMedia("(prefers-color-scheme: dark)").matches);
+    const initialTheme = isDark ? "dark" : "light";
+    
+    setTheme(initialTheme);
+    document.documentElement.classList.toggle("dark", isDark);
   }, []);
 
-  const toggleTheme = () => {
+  const toggleTheme = (e: React.MouseEvent) => {
+    e.preventDefault();
     const newTheme = theme === "light" ? "dark" : "light";
     setTheme(newTheme);
     localStorage.setItem("theme", newTheme);
     document.documentElement.classList.toggle("dark", newTheme === "dark");
   };
 
-  if (!mounted) return <div className="w-9 h-9" />;
+  if (!mounted) return <div className="w-10 h-10" />;
 
   return (
     <button
       onClick={toggleTheme}
-      className="theme-toggle-btn group"
+      className="w-10 h-10 flex items-center justify-center rounded-full bg-un-surface border border-un-border hover:border-brand/50 hover:bg-un-bg transition-all active:scale-95 group"
       aria-label="Toggle theme"
     >
       {theme === "light" ? (
         <Moon className="w-5 h-5 text-un-muted group-hover:text-un-text transition-colors" />
       ) : (
-        <Sun className="w-5 h-5 text-un-muted group-hover:text-white transition-colors" />
+        <Sun className="w-5 h-5 text-brand group-hover:text-brand transition-colors" />
       )}
     </button>
   );

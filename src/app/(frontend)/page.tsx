@@ -2,6 +2,7 @@ import { getDb } from "@/lib/db";
 import { HeroGrid } from "@/components/article/HeroGrid";
 import { CategorySection } from "@/components/category/CategorySection";
 import { TrendingList } from "@/components/category/TrendingList";
+import Link from "next/link";
 
 export const dynamic = "force-dynamic";
 
@@ -74,6 +75,21 @@ export default async function HomePage() {
           slug="power" 
           articles={powerArticles} 
         />
+      </div>
+
+      {/* Archive Link */}
+      <div className="flex justify-center pb-12">
+        <Link 
+          href="/blogs" 
+          className="group flex flex-col items-center space-y-4"
+        >
+          <span className="text-xs uppercase tracking-[0.3em] text-un-muted group-hover:text-brand transition-colors font-bold">
+            Continue Gathering Intelligence
+          </span>
+          <span className="text-2xl lg:text-3xl font-serif font-bold text-un-text border-b-2 border-brand/20 group-hover:border-brand transition-all pb-2">
+            View the Full Archive
+          </span>
+        </Link>
       </div>
     </div>
   );

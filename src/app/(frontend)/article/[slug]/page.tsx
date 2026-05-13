@@ -7,6 +7,7 @@ import { ArticleBody } from "@/components/article/ArticleBody";
 import { Badge } from "@/components/ui/Badge";
 import { Metadata } from "next";
 import { SITE_CONFIG } from "@config";
+import Link from "next/link";
 
 export const dynamic = "force-dynamic";
 
@@ -144,6 +145,67 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
           </div>
         </div>
       </div>
+
+      {/* Related Articles Section */}
+      <RelatedArticlesSection 
+        currentSlug={slug} 
+        categoryId={article.categoryId} 
+        categoryName={category?.name || "Intelligence"} 
+      />
     </article>
+  );
+}
+
+async function RelatedArticlesSection({ 
+  currentSlug, 
+  categoryId, 
+  categoryName 
+}: { 
+  currentSlug: string; 
+  categoryId: string | null;
+  categoryName: string;
+}) {
+  const { queries } = await getDb();
+  const related = await queries.articles.getRelatedArticles(currentSlug, categoryId, 3);
+
+  if (related.length === 0) return null;
+
+  return (
+    <section className="bg-un-surface border-y border-un-border py-24">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
+          <div className="space-y-4">
+            <Badge variant="premium">Strategic Intelligence</Badge>
+            <h2 className="text-3xl lg:text-4xl font-serif font-bold text-un-text">
+              Related Briefings in <span className="text-brand">{categoryName}</span>
+            </h2>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-12">
+          {related.map((article: any) => (
+            <Link 
+              key={article.id} 
+              href={`/article/${article.slug}`}
+              className="group space-y-4"
+            >
+              <div className="relative aspect-[16/9] overflow-hidden rounded-lg premium-border">
+                <img 
+                  src={article.heroImageUrl || "/placeholder.png"} 
+                  alt={article.title}
+                  className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-500"
+                />
+              </div>
+              <h3 className="text-xl font-serif font-bold text-un-text group-hover:text-brand transition-colors line-clamp-2">
+                {article.title}
+              </h3>
+              <div className="flex items-center text-[10px] uppercase tracking-widest text-un-muted font-bold">
+                {new Date(article.publishedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+              </div>
+            </Link>
+          ))}
+        </div>
+      </div>
+    </section>
   );
 }
