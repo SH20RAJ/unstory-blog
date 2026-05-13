@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getDb } from "@/lib/db";
 import { slugify } from "@/lib/slug";
-import { eq, desc, and, like, asc } from "drizzle-orm";
+import { eq, desc, and, or, like, asc } from "drizzle-orm";
 import {
   articles, authors, categories, topics, tags, entities, sources, mediaAssets,
   articleTopics, articleTags, articleEntities, articleSources,
@@ -64,6 +64,15 @@ const TOOLS = [
 
 function genId() { return crypto.randomUUID().split("-")[0]; }
 
+async function resolveId(db: any, table: any, value: string | undefined | null): Promise<string | null> {
+  if (!value) return null;
+  // Try finding by ID or Slug (most tables have both)
+  const r = await db.select().from(table)
+    .where(or(eq(table.id, value), eq(table.slug, value)))
+    .limit(1);
+  return r[0]?.id || null;
+}
+
 async function executeTool(name: string, args: any, db: any): Promise<any> {
   switch (name) {
     // ──── Articles ────
@@ -74,8 +83,8 @@ async function executeTool(name: string, args: any, db: any): Promise<any> {
       const conditions: any[] = [];
       if (args.status) conditions.push(eq(articles.status, args.status));
       if (args.category_slug) {
-        const cat = await db.select().from(categories).where(eq(categories.slug, args.category_slug)).limit(1);
-        if (cat[0]) conditions.push(eq(articles.categoryId, cat[0].id));
+        const categoryId = await resolveId(db, categories, args.category_slug);
+        if (categoryId) conditions.push(eq(articles.categoryId, categoryId));
       }
       if (args.search) conditions.push(like(articles.title, `%${args.search}%`));
       if (conditions.length) q = q.where(and(...conditions));
@@ -96,35 +105,65 @@ async function executeTool(name: string, args: any, db: any): Promise<any> {
       const id = args.id || genId();
       const slug = args.slug || slugify(args.title);
       const now = new Date();
-      const publishedAt = args.status === "published" ? (args.published_at ? new Date(args.published_at) : now) : (args.published_at ? new Date(args.published_at) : null);
+      
+      const categoryId = await resolveId(db, categories, args.category_id);
+      const authorId = await resolveId(db, authors, args.author_id);
+
+      const publishedAt = args.status === "published" 
+        ? (args.published_at ? new Date(args.published_at) : now) 
+        : (args.published_at ? new Date(args.published_at) : null);
+      
       const row = {
         id, title: args.title, slug,
         subtitle: args.subtitle || null, excerpt: args.excerpt || null, body: args.body,
         status: args.status || "draft", contentType: args.content_type || "news",
-        categoryId: args.category_id || null, authorId: args.author_id || null,
+        categoryId, authorId,
         heroImageUrl: args.hero_image_url || null,
         canonicalUrl: args.canonical_url || null, sourceUrl: args.source_url || null,
         language: args.language || "en", region: args.region || null,
         isBreaking: args.is_breaking || false, isFeatured: args.is_featured || false, isTrending: args.is_trending || false,
-        trustScore: args.trust_score ?? 100, factCheckStatus: args.fact_check_status || "unverified",
+        trustScore: Math.round((args.trust_score ?? 1) * (args.trust_score <= 1 ? 100 : 1)), 
+        factCheckStatus: args.fact_check_status || "unverified",
         aiSummary: args.ai_summary || null,
         seoTitle: args.seo_title || args.title, seoDescription: args.seo_description || args.excerpt || null,
         publishedAt, scheduledAt: args.scheduled_at ? new Date(args.scheduled_at) : null,
         createdAt: now, updatedAt: now,
       };
       const result = await db.insert(articles).values(row).returning();
-      // Junction tables
+      
+      // Junction tables with resolution
       if (args.tag_ids?.length) {
-        await db.insert(articleTags).values(args.tag_ids.map((tid: string) => ({ articleId: id, tagId: tid })));
+        const resolved = [];
+        for (const val of args.tag_ids) {
+          const rid = await resolveId(db, tags, val);
+          if (rid) resolved.push({ articleId: id, tagId: rid });
+        }
+        if (resolved.length) await db.insert(articleTags).values(resolved);
       }
       if (args.topic_ids?.length) {
-        await db.insert(articleTopics).values(args.topic_ids.map((tid: string) => ({ articleId: id, topicId: tid })));
+        const resolved = [];
+        for (const val of args.topic_ids) {
+          const rid = await resolveId(db, topics, val);
+          if (rid) resolved.push({ articleId: id, topicId: rid });
+        }
+        if (resolved.length) await db.insert(articleTopics).values(resolved);
       }
       if (args.entity_ids?.length) {
-        await db.insert(articleEntities).values(args.entity_ids.map((eid: string) => ({ articleId: id, entityId: eid })));
+        const resolved = [];
+        for (const val of args.entity_ids) {
+          const rid = await resolveId(db, entities, val);
+          if (rid) resolved.push({ articleId: id, entityId: rid });
+        }
+        if (resolved.length) await db.insert(articleEntities).values(resolved);
       }
       if (args.source_ids?.length) {
-        await db.insert(articleSources).values(args.source_ids.map((sid: string) => ({ articleId: id, sourceId: sid })));
+        const resolved = [];
+        for (const val of args.source_ids) {
+          // Sources only have id, no slug in schema
+          const r = await db.select().from(sources).where(eq(sources.id, val)).limit(1);
+          if (r[0]) resolved.push({ articleId: id, sourceId: r[0].id });
+        }
+        if (resolved.length) await db.insert(articleSources).values(resolved);
       }
       return result[0];
     }
@@ -132,7 +171,7 @@ async function executeTool(name: string, args: any, db: any): Promise<any> {
       const data: any = { updatedAt: new Date() };
       const fieldMap: Record<string, string> = {
         title: "title", slug: "slug", subtitle: "subtitle", excerpt: "excerpt", body: "body",
-        status: "status", content_type: "contentType", category_id: "categoryId", author_id: "authorId",
+        status: "status", content_type: "contentType",
         hero_image_url: "heroImageUrl", canonical_url: "canonicalUrl", source_url: "sourceUrl",
         is_breaking: "isBreaking", is_featured: "isFeatured", is_trending: "isTrending",
         trust_score: "trustScore", ai_summary: "aiSummary",
@@ -141,9 +180,35 @@ async function executeTool(name: string, args: any, db: any): Promise<any> {
       for (const [k, v] of Object.entries(fieldMap)) {
         if (args[k] !== undefined) data[v] = args[k];
       }
+      
+      if (args.category_id) data.categoryId = await resolveId(db, categories, args.category_id);
+      if (args.author_id) data.authorId = await resolveId(db, authors, args.author_id);
+
       if (args.published_at) data.publishedAt = new Date(args.published_at);
       if (args.status === "published" && !data.publishedAt) data.publishedAt = new Date();
+      
       const result = await db.update(articles).set(data).where(eq(articles.id, args.id)).returning();
+      
+      // Update junction tables if provided
+      if (args.tag_ids) {
+        await db.delete(articleTags).where(eq(articleTags.articleId, args.id));
+        const resolved = [];
+        for (const val of args.tag_ids) {
+          const rid = await resolveId(db, tags, val);
+          if (rid) resolved.push({ articleId: args.id, tagId: rid });
+        }
+        if (resolved.length) await db.insert(articleTags).values(resolved);
+      }
+      if (args.topic_ids) {
+        await db.delete(articleTopics).where(eq(articleTopics.articleId, args.id));
+        const resolved = [];
+        for (const val of args.topic_ids) {
+          const rid = await resolveId(db, topics, val);
+          if (rid) resolved.push({ articleId: args.id, topicId: rid });
+        }
+        if (resolved.length) await db.insert(articleTopics).values(resolved);
+      }
+      
       return result[0] || null;
     }
     case "delete_article": {
@@ -157,7 +222,7 @@ async function executeTool(name: string, args: any, db: any): Promise<any> {
     case "create_category": {
       const id = args.id || slugify(args.name);
       const slug = args.slug || slugify(args.name);
-      const row = { id, name: args.name, slug, description: args.description || null, parentId: args.parent_id || null, priority: args.priority ?? 0, navLabel: args.nav_label || args.name, color: args.color || null, icon: args.icon || null, seoTitle: args.seo_title || null, seoDescription: args.seo_description || null, isActive: args.is_active !== false, createdAt: new Date(), updatedAt: new Date() };
+      const row = { id, name: args.name, slug, description: args.description || null, parentId: await resolveId(db, categories, args.parent_id), priority: args.priority ?? 0, navLabel: args.nav_label || args.name, color: args.color || null, icon: args.icon || null, seoTitle: args.seo_title || null, seoDescription: args.seo_description || null, isActive: args.is_active !== false, createdAt: new Date(), updatedAt: new Date() };
       const result = await db.insert(categories).values(row).returning();
       return result[0];
     }
@@ -168,6 +233,7 @@ async function executeTool(name: string, args: any, db: any): Promise<any> {
         if (args[snakeKey] !== undefined) data[k] = args[snakeKey];
         if (args[k] !== undefined) data[k] = args[k];
       }
+      if (args.parent_id) data.parentId = await resolveId(db, categories, args.parent_id);
       const result = await db.update(categories).set(data).where(eq(categories.id, args.id)).returning();
       return result[0] || null;
     }
@@ -205,7 +271,8 @@ async function executeTool(name: string, args: any, db: any): Promise<any> {
     case "create_topic": {
       const id = args.id || genId();
       const slug = args.slug || slugify(args.name);
-      const row = { id, name: args.name, slug, description: args.description || null, categoryId: args.category_id || null, trendingScore: args.trending_score ?? 0, isTrending: args.is_trending || false, createdAt: new Date(), updatedAt: new Date() };
+      const categoryId = await resolveId(db, categories, args.category_id);
+      const row = { id, name: args.name, slug, description: args.description || null, categoryId, trendingScore: args.trending_score ?? 0, isTrending: args.is_trending || false, createdAt: new Date(), updatedAt: new Date() };
       const result = await db.insert(topics).values(row).returning();
       return result[0];
     }
