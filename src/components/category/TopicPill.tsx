@@ -21,7 +21,7 @@ export function TopicPill({ name, slug, className, active }: TopicPillProps) {
         "inline-flex items-center px-4 py-1.5 rounded-full text-xs font-semibold tracking-wider uppercase transition-all border",
         active 
           ? "bg-brand border-brand text-premium-dark" 
-          : "bg-premium-gray border-premium-border text-premium-muted hover:border-brand/50 hover:text-white",
+          : "bg-premium-gray border-premium-border text-premium-muted hover:border-brand/50 hover:text-black",
         className
       )}
     >

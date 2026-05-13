@@ -16,7 +16,7 @@ export function CategorySection({ title, slug, articles }: CategorySectionProps)
       <div className="flex items-end justify-between mb-10">
         <div className="space-y-1">
           <span className="text-[10px] uppercase tracking-[0.3em] text-brand font-bold">Category</span>
-          <h2 className="text-3xl lg:text-4xl font-serif font-bold text-white tracking-tight">{title}</h2>
+          <h2 className="text-3xl lg:text-4xl font-serif font-bold text-black tracking-tight">{title}</h2>
         </div>
         <Link 
           href={`/category/${slug}`} 

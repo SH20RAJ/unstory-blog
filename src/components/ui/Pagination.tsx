@@ -24,7 +24,7 @@ export function Pagination({ currentPage, totalPages, baseUrl, className }: Pagi
       <Link
         href={`${baseUrl}?page=${Math.max(1, currentPage - 1)}`}
         className={cn(
-          "p-2 rounded-md border border-premium-border text-premium-muted hover:text-white transition-colors",
+          "p-2 rounded-md border border-premium-border text-premium-muted hover:text-black transition-colors",
           currentPage === 1 && "pointer-events-none opacity-50"
         )}
       >
@@ -39,7 +39,7 @@ export function Pagination({ currentPage, totalPages, baseUrl, className }: Pagi
             "w-10 h-10 flex items-center justify-center rounded-md border text-sm font-bold transition-all",
             currentPage === page
               ? "bg-brand border-brand text-premium-dark"
-              : "border-premium-border text-premium-muted hover:border-brand/50 hover:text-white"
+              : "border-premium-border text-premium-muted hover:border-brand/50 hover:text-black"
           )}
         >
           {page}
@@ -49,7 +49,7 @@ export function Pagination({ currentPage, totalPages, baseUrl, className }: Pagi
       <Link
         href={`${baseUrl}?page=${Math.min(totalPages, currentPage + 1)}`}
         className={cn(
-          "p-2 rounded-md border border-premium-border text-premium-muted hover:text-white transition-colors",
+          "p-2 rounded-md border border-premium-border text-premium-muted hover:text-black transition-colors",
           currentPage === totalPages && "pointer-events-none opacity-50"
         )}
       >

@@ -7,7 +7,7 @@ import { getCloudflareContext } from "@opennextjs/cloudflare";
  * In development, it uses the Miniflare/Wrangler local D1 state.
  */
 export async function getDb() {
-  const context = await getCloudflareContext();
+  const context = await getCloudflareContext({ async: true });
   const d1 = context.env.D1 as D1Database;
   
   if (!d1) {

@@ -12,7 +12,7 @@ export function SiteFooter() {
           {/* Brand Column */}
           <div className="lg:col-span-2">
             <Link href="/" className="inline-block mb-6">
-              <span className="text-2xl font-serif font-bold tracking-tight text-white">
+              <span className="text-2xl font-serif font-black tracking-tighter text-black">
                 {SITE_CONFIG.name.toUpperCase()}
               </span>
             </Link>
@@ -35,7 +35,7 @@ export function SiteFooter() {
           {/* Nav Sections */}
           {FOOTER_SECTIONS.map((section) => (
             <div key={section.title}>
-              <h3 className="text-white font-serif font-semibold mb-6 tracking-wide uppercase text-xs">
+              <h3 className="text-black font-serif font-semibold mb-6 tracking-wide uppercase text-xs">
                 {section.title}
               </h3>
               <ul className="space-y-4">
@@ -60,13 +60,13 @@ export function SiteFooter() {
             © {currentYear} {SITE_CONFIG.name}. All rights reserved.
           </p>
           <div className="flex space-x-8">
-            <Link href="/privacy" className="text-xs text-premium-muted hover:text-white transition-colors">
+            <Link href="/privacy" className="text-xs text-premium-muted hover:text-black transition-colors">
               Privacy Policy
             </Link>
-            <Link href="/terms" className="text-xs text-premium-muted hover:text-white transition-colors">
+            <Link href="/terms" className="text-xs text-premium-muted hover:text-black transition-colors">
               Terms of Service
             </Link>
-            <Link href="/advertise" className="text-xs text-premium-muted hover:text-white transition-colors">
+            <Link href="/advertise" className="text-xs text-premium-muted hover:text-black transition-colors">
               Advertise
             </Link>
           </div>

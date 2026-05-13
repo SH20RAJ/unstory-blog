@@ -2,7 +2,6 @@ import { getDb } from "@/lib/db";
 import { HeroGrid } from "@/components/article/HeroGrid";
 import { CategorySection } from "@/components/category/CategorySection";
 import { TrendingList } from "@/components/category/TrendingList";
-import { NewsletterBlock } from "@/components/ui/NewsletterBlock";
 
 export const dynamic = "force-dynamic";
 

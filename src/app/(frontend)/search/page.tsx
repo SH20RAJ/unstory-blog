@@ -20,7 +20,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
   return (
     <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-20">
       <header className="mb-16 lg:mb-24 max-w-2xl mx-auto text-center">
-        <h1 className="text-4xl lg:text-5xl font-serif font-bold text-white tracking-tight mb-8">
+        <h1 className="text-4xl lg:text-5xl font-serif font-bold text-black tracking-tight mb-8">
           {query ? `Search: "${query}"` : "Search Intelligence"}
         </h1>
         <SearchInput className="max-w-xl mx-auto" />

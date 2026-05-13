@@ -4,12 +4,12 @@
   --font-serif: "Instrument Serif", serif;
   --font-sans: "Inter", sans-serif;
 
-  --color-brand: #C9A84C; /* Gold */
-  --color-premium-dark: #0A0A0A;
-  --color-premium-gray: #1C1C1C;
-  --color-premium-border: #2D2D2D;
-  --color-premium-text: #E5E5E5;
-  --color-premium-muted: #A0A0A0;
+  --color-brand: #E11D48; /* Red accent like Forbes */
+  --color-premium-dark: #FFFFFF; /* White background */
+  --color-premium-gray: #F8F8F8;
+  --color-premium-border: #E5E5E5;
+  --color-premium-text: #111111;
+  --color-premium-muted: #666666;
 }
 
 @layer base {
@@ -18,11 +18,11 @@
   }
 
   h1, h2, h3, h4, h5, h6 {
-    @apply font-serif font-medium;
+    @apply font-serif font-bold;
   }
 
   .premium-gradient {
-    background: linear-gradient(135deg, #0A0A0A 0%, #1A1A1A 100%);
+    background: linear-gradient(135deg, #FFFFFF 0%, #F0F0F0 100%);
   }
 
   .premium-border {
@@ -30,11 +30,11 @@
   }
 
   .premium-card {
-    @apply bg-premium-gray border border-premium-border rounded-lg overflow-hidden transition-all hover:border-brand/50;
+    @apply bg-premium-dark border border-premium-border rounded-none overflow-hidden transition-all hover:border-brand/30;
   }
 
   .premium-link {
-    @apply transition-colors hover:text-brand;
+    @apply transition-colors hover:text-brand underline decoration-brand/30 underline-offset-4;
   }
 }
 
@@ -44,7 +44,7 @@
 }
 
 ::-webkit-scrollbar-track {
-  @apply bg-premium-dark;
+  @apply bg-premium-gray;
 }
 
 ::-webkit-scrollbar-thumb {

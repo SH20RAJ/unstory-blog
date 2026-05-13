@@ -4,9 +4,9 @@ import { getDb } from "@/lib/db";
 import { ArticleMeta } from "@/components/article/ArticleMeta";
 import { AuthorByline } from "@/components/article/AuthorByline";
 import { ArticleBody } from "@/components/article/ArticleBody";
-import { NewsletterBlock } from "@/components/ui/NewsletterBlock";
 import { Badge } from "@/components/ui/Badge";
 import { Metadata } from "next";
+import { SITE_CONFIG } from "@config";
 
 export const dynamic = "force-dynamic";
 
@@ -22,14 +22,28 @@ export async function generateMetadata({ params }: ArticlePageProps): Promise<Me
   if (!result) return {};
 
   const { articles: article } = result;
+  const title = article.seoTitle || article.title;
+  const description = article.seoDescription || article.excerpt || SITE_CONFIG.description;
+
   return {
-    title: article.title,
-    description: article.seoDescription || article.excerpt,
+    title,
+    description,
+    alternates: {
+      canonical: `${SITE_CONFIG.url}/article/${slug}`,
+    },
     openGraph: {
-      title: article.seoTitle || article.title,
-      description: article.seoDescription || article.excerpt,
+      title,
+      description,
       type: "article",
-      publishedTime: article.publishedAt?.toISOString(),
+      url: `${SITE_CONFIG.url}/article/${slug}`,
+      siteName: SITE_CONFIG.name,
+      publishedTime: article.publishedAt?.toISOString?.() || undefined,
+      modifiedTime: article.updatedAt?.toISOString?.() || undefined,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
     },
   };
 }
@@ -45,8 +59,36 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
 
   const { articles: article, categories: category, authors: author, media_assets: heroImage } = result;
 
+  // JSON-LD structured data for SEO
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "NewsArticle",
+    headline: article.title,
+    description: article.seoDescription || article.excerpt,
+    image: heroImage?.publicUrl ? [heroImage.publicUrl] : [],
+    datePublished: article.publishedAt?.toISOString?.() || article.createdAt?.toISOString?.(),
+    dateModified: article.updatedAt?.toISOString?.() || article.createdAt?.toISOString?.(),
+    author: author ? [{ "@type": "Person", name: author.name, url: `${SITE_CONFIG.url}/author/${author.slug}` }] : [],
+    publisher: {
+      "@type": "Organization",
+      name: SITE_CONFIG.name,
+      url: SITE_CONFIG.url,
+    },
+    mainEntityOfPage: {
+      "@type": "WebPage",
+      "@id": `${SITE_CONFIG.url}/article/${slug}`,
+    },
+    articleSection: category?.name || undefined,
+  };
+
   return (
     <article className="min-h-screen">
+      {/* JSON-LD Structured Data */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+
       {/* Header Section */}
       <header className="container mx-auto px-4 sm:px-6 lg:px-8 pt-16 lg:pt-24 pb-12 lg:pb-20 max-w-4xl text-center">
         <div className="flex flex-col items-center space-y-6">
@@ -56,7 +98,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
             </Badge>
           )}
           
-          <h1 className="text-4xl lg:text-6xl xl:text-7xl font-serif font-bold text-white leading-[1.1] tracking-tight">
+          <h1 className="text-4xl lg:text-6xl xl:text-7xl font-serif font-bold text-black leading-[1.1] tracking-tight">
             {article.title}
           </h1>
 
@@ -105,10 +147,6 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
             
             <div className="pt-16 border-t border-premium-border">
               {author && <AuthorByline author={author} />}
-            </div>
-
-            <div className="pt-12">
-              <NewsletterBlock />
             </div>
           </div>
         </div>

@@ -42,7 +42,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${inter.variable} ${instrumentSerif.variable}`}>
-      <body className="min-h-screen flex flex-col bg-premium-dark text-premium-text">
+      <body className="min-h-screen flex flex-col bg-white text-premium-text">
         <SiteHeader />
         <main className="flex-grow">
           {children}

@@ -66,7 +66,7 @@ export function ArticleCard({ article, variant = "default", className }: Article
         
         <Link href={`/article/${slug}`} className="block">
           <h3 className={cn(
-            "font-serif text-white group-hover:text-brand transition-colors leading-tight",
+            "font-serif text-black group-hover:text-brand transition-colors leading-tight",
             variant === "compact" ? "text-lg" : "text-2xl"
           )}>
             {title}

@@ -41,7 +41,7 @@ export function FeaturedArticle({ article }: FeaturedArticleProps) {
             )}
             
             <Link href={`/article/${slug}`} className="block">
-              <h2 className="text-4xl lg:text-5xl xl:text-6xl font-serif font-bold text-white leading-[1.1] group-hover:text-brand transition-colors">
+              <h2 className="text-4xl lg:text-5xl xl:text-6xl font-serif font-bold text-black leading-[1.1] group-hover:text-brand transition-colors">
                 {title}
               </h2>
             </Link>
@@ -68,7 +68,7 @@ export function FeaturedArticle({ article }: FeaturedArticleProps) {
                       {author.name.charAt(0)}
                     </div>
                   )}
-                  <span className="text-sm font-medium text-white">{author.name}</span>
+                  <span className="text-sm font-medium text-black">{author.name}</span>
                 </div>
               )}
               <ArticleMeta date={publishedAt} className="text-base" />
@@ -87,7 +87,7 @@ export function FeaturedArticle({ article }: FeaturedArticleProps) {
               className="object-cover transition-transform duration-700 group-hover:scale-105"
             />
           ) : (
-            <div className="w-full h-full bg-premium-dark flex items-center justify-center">
+            <div className="w-full h-full bg-white flex items-center justify-center">
               <span className="text-premium-border font-serif text-8xl font-bold tracking-tighter opacity-10">UNSTORY</span>
             </div>
           )}

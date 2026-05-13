@@ -31,7 +31,7 @@ export function AuthorByline({ author }: AuthorBylineProps) {
       <div className="flex flex-col space-y-2">
         <span className="text-[10px] uppercase tracking-[0.2em] text-brand font-bold">Written By</span>
         <Link href={`/author/${author.slug}`}>
-          <h4 className="text-xl font-serif font-bold text-white hover:text-brand transition-colors">
+          <h4 className="text-xl font-serif font-bold text-black hover:text-brand transition-colors">
             {author.name}
           </h4>
         </Link>

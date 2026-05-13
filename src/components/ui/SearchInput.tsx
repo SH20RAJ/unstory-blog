@@ -34,7 +34,7 @@ export function SearchInput({ placeholder = "Search intelligence...", className 
         value={query}
         onChange={(e) => setQuery(e.target.value)}
         placeholder={placeholder}
-        className="w-full pl-12 pr-4 py-3 bg-premium-gray border border-premium-border rounded-full text-sm text-white placeholder:text-premium-muted focus:outline-none focus:border-brand/50 transition-all"
+        className="w-full pl-12 pr-4 py-3 bg-premium-gray border border-premium-border rounded-full text-sm text-black placeholder:text-premium-muted focus:outline-none focus:border-brand/50 transition-all"
       />
     </form>
   );

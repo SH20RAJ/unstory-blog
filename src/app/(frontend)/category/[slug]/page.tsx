@@ -3,11 +3,28 @@ import { getDb } from "@/lib/db";
 import { ArticleCard } from "@/components/article/ArticleCard";
 import { TrendingList } from "@/components/category/TrendingList";
 import { TopicPill } from "@/components/category/TopicPill";
+import { Metadata } from "next";
+import { SITE_CONFIG } from "@config";
 
 export const dynamic = "force-dynamic";
 
 interface CategoryPageProps {
   params: Promise<{ slug: string }>;
+}
+
+export async function generateMetadata({ params }: CategoryPageProps): Promise<Metadata> {
+  const { slug } = await params;
+  const { queries } = await getDb();
+  const cat = await queries.categories.getCategoryBySlug(slug);
+  if (!cat) return {};
+  const title = cat.seoTitle || `${cat.name} Intelligence`;
+  const description = cat.seoDescription || cat.description || `${cat.name} coverage from ${SITE_CONFIG.name}`;
+  return {
+    title,
+    description,
+    alternates: { canonical: `${SITE_CONFIG.url}/category/${slug}` },
+    openGraph: { title, description, url: `${SITE_CONFIG.url}/category/${slug}`, siteName: SITE_CONFIG.name },
+  };
 }
 
 export default async function CategoryPage({ params }: CategoryPageProps) {
@@ -32,7 +49,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
           <span className="text-[10px] uppercase tracking-[0.4em] text-brand font-bold">
             Intelligence Category
           </span>
-          <h1 className="text-5xl lg:text-7xl font-serif font-bold text-white tracking-tight">
+          <h1 className="text-5xl lg:text-7xl font-serif font-bold text-black tracking-tight">
             {categoryResult.name}
           </h1>
           <p className="text-xl lg:text-2xl text-premium-muted font-serif leading-relaxed italic">
