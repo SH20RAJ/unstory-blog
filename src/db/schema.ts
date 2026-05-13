@@ -25,7 +25,7 @@ export const categories = sqliteTable("categories", {
   name: text("name").notNull(),
   slug: text("slug").notNull().unique(),
   description: text("description"),
-  parentId: text("parent_id").references((): AnySQLiteTable => categories.id),
+  parentId: text("parent_id").references(() => categories.id as any),
   priority: integer("priority").default(0),
   navLabel: text("nav_label"),
   color: text("color"),
