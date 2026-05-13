@@ -11,7 +11,7 @@ export function Pagination({ currentPage, totalPages, baseUrl }: PaginationProps
   if (totalPages <= 1) return null;
 
   const getPageUrl = (page: number) => {
-    const url = new URL(baseUrl, "https://example.com");
+    const url = new URL(baseUrl, "https://unstory.app");
     url.searchParams.set("page", page.toString());
     return `${url.pathname}${url.search}`;
   };
