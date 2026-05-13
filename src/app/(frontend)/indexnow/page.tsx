@@ -18,7 +18,7 @@ export default function IndexNowPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ urls: urlList }),
       });
-      const data = await res.json();
+      const data = (await res.json()) as any;
       if (data.success) {
         setMessage({ type: "success", text: `Successfully submitted ${data.count} URLs to IndexNow.` });
       } else {
@@ -59,7 +59,7 @@ export default function IndexNowPage() {
           params: { name: "list_articles", arguments: { status: "published", limit: 1000 } }
         }),
       });
-      const data = await res.json();
+      const data = (await res.json()) as any;
       const articles = JSON.parse(data.result.content[0].text);
       const articleUrls = articles.map((a: any) => `${SITE_CONFIG.url}/article/${a.slug}`);
       handleSubmit(articleUrls);

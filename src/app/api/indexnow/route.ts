@@ -4,7 +4,7 @@ import { SITE_CONFIG } from "@config";
 
 export async function POST(req: NextRequest) {
   try {
-    const { urls } = await req.json();
+    const { urls } = (await req.json()) as any;
 
     if (!urls || !Array.isArray(urls) || urls.length === 0) {
       return NextResponse.json({ error: "Invalid URL list" }, { status: 400 });
