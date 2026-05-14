@@ -68,9 +68,9 @@ export const SOCIAL_LINKS = {
 /** Site metadata */
 export const SITE_CONFIG = {
   name: "Unstory",
-  tagline: "Premium Internet Intelligence",
+  tagline: "Strategic Intelligence for Founders, Investors, and Operators",
   description:
-    "Unstory.app is a premium intelligence publication for wealth-minded readers covering money, AI, business, power, luxury, technology, and high-income skills.",
+    "Strategic intelligence tracking AI, markets, and power shifts. Deciphering complex trends for high-agency professionals, founders, and operators.",
   url: "https://unstory.app",
   ogImage: "/og-default.png",
   locale: "en_US",

@@ -9,6 +9,8 @@ import { SITE_CONFIG } from "@config";
 import Link from "next/link";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import { PrevNextNavigation } from "@/components/article/PrevNextNavigation";
+import { IntelligenceFooter } from "@/components/article/IntelligenceFooter";
+import { TrendingUp, ShieldCheck, FileSearch } from "lucide-react";
 
 export const dynamic = "force-dynamic";
 
@@ -61,7 +63,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
     notFound();
   }
 
-  const { articles: article, categories: category, authors: author } = result;
+  const { articles: article, categories: category, authors: author, sources: articleSourcesList } = result;
   
   // Fetch prev/next articles in parallel
   const { prev, next } = await queries.articles.getPrevNextArticles(article.publishedAt || article.createdAt);
@@ -78,11 +80,11 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
     author: author ? [{ "@type": "Person", name: author.name, url: `${SITE_CONFIG.url}/author/${author.slug}` }] : [],
     publisher: {
       "@type": "Organization",
-      name: SITE_CONFIG.name,
-      url: SITE_CONFIG.url,
-      logo: {
+      "name": SITE_CONFIG.name,
+      "url": SITE_CONFIG.url,
+      "logo": {
         "@type": "ImageObject",
-        url: `${SITE_CONFIG.url}/favicon.png`
+        "url": `${SITE_CONFIG.url}/favicon.png`
       }
     },
     mainEntityOfPage: {
@@ -184,11 +186,57 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
           {/* Main Content */}
           <div className="lg:col-span-8 lg:col-start-3 space-y-12">
+            
+            {/* Audit Suggestion: Executive Summary / Why This Matters */}
+            <section className="p-8 lg:p-12 bg-un-surface border border-un-border rounded-2xl space-y-8 shadow-2xl shadow-brand/5 relative overflow-hidden group">
+              <div className="absolute top-0 right-0 p-6 text-brand/10 group-hover:text-brand/20 transition-colors">
+                <ShieldCheck className="w-24 h-24 -mr-8 -mt-8" />
+              </div>
+              
+              <div className="relative z-10 space-y-6">
+                <div className="flex items-center gap-3">
+                  <div className="w-1.5 h-6 bg-brand"></div>
+                  <h2 className="text-2xl font-serif font-bold text-white">Executive Intelligence</h2>
+                </div>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                  <div className="space-y-4">
+                    <h3 className="text-xs uppercase tracking-widest text-un-muted font-bold flex items-center gap-2">
+                      <TrendingUp className="w-3 h-3 text-brand" /> Why This Matters
+                    </h3>
+                    <p className="text-lg text-un-text font-serif italic leading-relaxed">
+                      {article.excerpt || "This briefing deciphers critical shifts in the market hierarchy that directly impact strategic decision-making for investors and operators."}
+                    </p>
+                  </div>
+                  <div className="space-y-4">
+                    <h3 className="text-xs uppercase tracking-widest text-un-muted font-bold flex items-center gap-2">
+                      <FileSearch className="w-3 h-3 text-brand" /> Analysis Scope
+                    </h3>
+                    <ul className="space-y-2">
+                      {[
+                        "Primary data verification",
+                        "Strategic market implications",
+                        "Predictive risk assessment"
+                      ].map((item, i) => (
+                        <li key={i} className="text-xs text-un-muted flex items-center gap-2">
+                          <span className="w-1 h-1 rounded-full bg-brand"></span> {item}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </section>
+
             <ArticleBody content={article.body} />
             
+            <IntelligenceFooter 
+              article={article} 
+              author={author} 
+              sources={articleSourcesList} 
+            />
+            
             <div className="pt-16 border-t border-un-border space-y-12">
-              {author && <AuthorByline author={author} />}
-              
               <PrevNextNavigation prev={prev} next={next} />
             </div>
           </div>

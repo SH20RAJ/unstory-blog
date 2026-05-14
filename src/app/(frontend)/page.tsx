@@ -2,6 +2,7 @@ import { getDb } from "@/lib/db";
 import { HeroGrid } from "@/components/article/HeroGrid";
 import { CategorySection } from "@/components/category/CategorySection";
 import { TrendingList } from "@/components/category/TrendingList";
+import { Badge } from "@/components/ui/Badge";
 import Link from "next/link";
 
 export const dynamic = "force-dynamic";
@@ -31,6 +32,17 @@ export default async function HomePage() {
 
   return (
     <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-20">
+      {/* Brand Manifesto Section */}
+      <section className="pt-8 pb-16 border-b border-un-border text-center space-y-6 max-w-4xl mx-auto">
+        <Badge variant="premium" className="mb-4">Operational Intelligence</Badge>
+        <h1 className="text-5xl lg:text-7xl font-serif font-bold text-un-text tracking-tighter leading-tight">
+          Strategic intelligence for <span className="text-brand">founders, investors, and operators</span> tracking AI, markets, and power shifts.
+        </h1>
+        <p className="text-xl lg:text-2xl text-un-muted font-serif italic max-w-3xl mx-auto">
+          Every briefing is sourced, scored, and updated for high-agency professionals deciphering the new world order.
+        </p>
+      </section>
+
       {/* Hero Section */}
       <section>
         <HeroGrid 

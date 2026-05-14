@@ -1,38 +1,61 @@
 import { getDb } from "@/lib/db";
 import { articles, categories } from "@/db/schema";
-import { eq, desc } from "drizzle-orm";
-
-const SITE_URL = "https://unstory.app";
+import { eq, desc, notLike, and } from "drizzle-orm";
+import { SITE_CONFIG } from "@config";
 
 export async function GET() {
   const { db } = await getDb();
 
   const allArticles = await db
-    .select({ slug: articles.slug, updatedAt: articles.updatedAt, publishedAt: articles.publishedAt })
+    .select({ 
+      title: articles.title,
+      slug: articles.slug, 
+      updatedAt: articles.updatedAt, 
+      publishedAt: articles.publishedAt 
+    })
     .from(articles)
-    .where(eq(articles.status, "published"))
+    .where(
+      and(
+        eq(articles.status, "published"),
+        notLike(articles.slug, "%test%"),
+        notLike(articles.title, "%Test%")
+      )
+    )
     .orderBy(desc(articles.publishedAt));
 
   const allCategories = await db.select({ slug: categories.slug }).from(categories).where(eq(categories.isActive, true));
 
-  const staticPages = ["", "/blogs", "/trending", "/about", "/contact", "/advertise", "/privacy", "/terms"];
+  const staticPages = [
+    "", 
+    "/blogs", 
+    "/trending", 
+    "/about", 
+    "/contact", 
+    "/advertise", 
+    "/privacy", 
+    "/terms",
+    "/editorial-policy",
+    "/corrections-policy",
+    "/fact-checking-policy",
+    "/methodology"
+  ];
 
   const urls = [
     ...staticPages.map((path) => `
   <url>
-    <loc>${SITE_URL}${path}</loc>
+    <loc>${SITE_CONFIG.url}${path}</loc>
     <changefreq>${path === "" ? "hourly" : "weekly"}</changefreq>
     <priority>${path === "" ? "1.0" : "0.5"}</priority>
   </url>`),
     ...allCategories.map((cat) => `
   <url>
-    <loc>${SITE_URL}/category/${cat.slug}</loc>
+    <loc>${SITE_CONFIG.url}/category/${cat.slug}</loc>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>`),
     ...allArticles.map((a) => `
   <url>
-    <loc>${SITE_URL}/article/${a.slug}</loc>
+    <loc>${SITE_CONFIG.url}/article/${a.slug}</loc>
     <lastmod>${(a.updatedAt || a.publishedAt || new Date()).toISOString?.() || new Date().toISOString()}</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>

@@ -1,5 +1,5 @@
-import { eq, desc, and, or, like, not, count, sql, asc } from "drizzle-orm";
-import { articles, authors, categories, mediaAssets } from "../schema";
+import { eq, desc, and, or, like, not, count, sql, asc, notLike } from "drizzle-orm";
+import { articles, authors, categories, mediaAssets, articleSources, sources } from "../schema";
 
 export function createArticlesQueries(db: any) {
   return {
@@ -56,7 +56,24 @@ export function createArticlesQueries(db: any) {
         .where(eq(articles.slug, slug))
         .limit(1);
       
-      return results[0] || null;
+      if (!results[0]) return null;
+
+      // Fetch sources for this article
+      const articleSourcesList = await db
+        .select({
+          id: sources.id,
+          name: sources.name,
+          url: sources.url,
+          sourceType: sources.sourceType,
+        })
+        .from(articleSources)
+        .innerJoin(sources, eq(articleSources.sourceId, sources.id))
+        .where(eq(articleSources.articleId, results[0].articles.id));
+      
+      return {
+        ...results[0],
+        sources: articleSourcesList
+      };
     },
 
     async getArticlesByCategory(categorySlug: string, limit = 10, offset = 0) {
@@ -134,6 +151,8 @@ export function createArticlesQueries(db: any) {
         .where(
           and(
             eq(articles.status, "published"),
+            notLike(articles.slug, "%test%"),
+            notLike(articles.title, "%Test%"),
             or(
               like(articles.title, searchPattern),
               like(articles.excerpt, searchPattern),
