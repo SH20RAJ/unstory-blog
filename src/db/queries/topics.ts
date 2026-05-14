@@ -1,8 +1,13 @@
-import { eq, desc, or, like } from "drizzle-orm";
+import { eq, desc, or, like, count } from "drizzle-orm";
 import { topics } from "../schema";
 
 export function createTopicsQueries(db: any) {
   return {
+    async getTopicCount() {
+      const res = await db.select({ value: count() }).from(topics);
+      return res[0]?.value || 0;
+    },
+
     async getAllTopics() {
       return db.select().from(topics).orderBy(topics.name);
     },

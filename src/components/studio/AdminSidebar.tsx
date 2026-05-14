@@ -24,55 +24,60 @@ export function AdminSidebar() {
 
   const navItems = [
     { label: "Dashboard", href: "/studio", icon: LayoutDashboard },
-    { label: "Articles", href: "/studio/articles", icon: FileText },
+    { label: "Briefings", href: "/studio/articles", icon: FileText },
     { label: "Categories", href: "/studio/categories", icon: Layers },
     { label: "Topics", href: "/studio/topics", icon: Tag },
-    { label: "Media", href: "/studio/media", icon: ImageIcon },
-    { label: "Settings", href: "/studio/settings", icon: Settings },
+    { label: "Intelligence Media", href: "/studio/media", icon: ImageIcon },
+    { label: "Configurations", href: "/studio/settings", icon: Settings },
   ];
 
   return (
-    <aside className="w-64 border-r border-un-border flex flex-col">
-      <div className="p-8 border-b border-un-border">
-        <Link href="/" className="flex items-center space-x-2">
-          <span className="text-xl font-serif font-bold text-white tracking-tighter">UNSTORY</span>
-          <span className="text-[8px] uppercase tracking-widest text-brand font-bold bg-brand/10 px-1.5 py-0.5 rounded">CMS</span>
+    <aside className="w-72 border-r border-un-border flex flex-col bg-un-bg/50 backdrop-blur-xl">
+      <div className="p-10 border-b border-un-border">
+        <Link href="/" className="flex flex-col space-y-1">
+          <div className="flex items-center space-x-2">
+            <span className="text-2xl font-serif font-bold text-white tracking-tighter">UNSTORY</span>
+            <div className="w-1.5 h-1.5 rounded-full bg-brand animate-pulse"></div>
+          </div>
+          <span className="text-[10px] uppercase tracking-[0.4em] text-un-muted font-bold">
+            Editorial <span className="text-brand">Studio</span>
+          </span>
         </Link>
       </div>
 
-      <nav className="flex-grow p-4 space-y-2">
+      <nav className="flex-grow p-6 space-y-3">
         {navItems.map((item) => {
-          const isActive = pathname === item.href || pathname.startsWith(`${item.href}/`);
+          const isActive = pathname === item.href || (item.href !== "/studio" && pathname.startsWith(item.href));
           return (
             <Link
               key={item.href}
               href={item.href}
               className={cn(
-                "flex items-center space-x-3 px-4 py-3 rounded-lg text-sm font-medium transition-all",
+                "flex items-center space-x-4 px-5 py-4 rounded-none text-xs font-bold uppercase tracking-widest transition-all border-l-2",
                 isActive 
-                  ? "bg-brand/10 text-brand" 
-                  : "text-un-muted hover:bg-un-surface hover:text-white"
+                  ? "bg-brand/5 text-brand border-brand shadow-[inset_0_0_20px_rgba(225,29,72,0.05)]" 
+                  : "text-un-muted border-transparent hover:text-white hover:border-brand/30"
               )}
             >
-              <item.icon className="w-5 h-5" />
+              <item.icon className={cn("w-4 h-4", isActive ? "text-brand" : "text-un-muted group-hover:text-white")} />
               <span>{item.label}</span>
             </Link>
           );
         })}
       </nav>
 
-      <div className="p-4 border-t border-un-border space-y-2">
+      <div className="p-6 border-t border-un-border space-y-3 bg-un-surface/30">
         <Link 
           href="/" 
           target="_blank"
-          className="flex items-center space-x-3 px-4 py-3 rounded-lg text-sm font-medium text-un-muted hover:bg-un-surface hover:text-white transition-all"
+          className="flex items-center space-x-4 px-5 py-4 text-xs font-bold uppercase tracking-widest text-un-muted hover:text-brand transition-all"
         >
-          <ExternalLink className="w-5 h-5" />
-          <span>View Website</span>
+          <ExternalLink className="w-4 h-4" />
+          <span>Live Site</span>
         </Link>
-        <button className="w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-sm font-medium text-red-500/80 hover:bg-red-500/10 hover:text-red-500 transition-all text-left">
-          <LogOut className="w-5 h-5" />
-          <span>Logout</span>
+        <button className="w-full flex items-center space-x-4 px-5 py-4 text-xs font-bold uppercase tracking-widest text-red-500/60 hover:text-red-500 transition-all text-left">
+          <LogOut className="w-4 h-4" />
+          <span>Terminate Session</span>
         </button>
       </div>
     </aside>

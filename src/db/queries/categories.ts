@@ -1,8 +1,13 @@
-import { eq, asc } from "drizzle-orm";
+import { eq, asc, count } from "drizzle-orm";
 import { categories } from "../schema";
 
 export function createCategoriesQueries(db: any) {
   return {
+    async getCategoryCount() {
+      const res = await db.select({ value: count() }).from(categories);
+      return res[0]?.value || 0;
+    },
+
     async getAllCategories() {
       return db.select().from(categories).orderBy(asc(categories.priority));
     },
