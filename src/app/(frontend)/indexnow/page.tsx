@@ -111,7 +111,7 @@ export default function IndexNowPage() {
               setMessage(null);
               try {
                 const res = await fetch("/api/indexnow");
-                const data = await res.json();
+                const data = (await res.json()) as any;
                 if (data.success) {
                   setMessage({ type: "success", text: `Successfully submitted ${data.count} URLs from sitemap.` });
                 } else {
