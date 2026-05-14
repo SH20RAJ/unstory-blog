@@ -15,7 +15,7 @@ export async function GET() {
 
   const allCategories = await db.select({ slug: categories.slug }).from(categories).where(eq(categories.isActive, true));
 
-  const staticPages = ["", "/latest", "/trending", "/about", "/contact", "/advertise", "/privacy", "/terms"];
+  const staticPages = ["", "/blogs", "/trending", "/about", "/contact", "/advertise", "/privacy", "/terms"];
 
   const urls = [
     ...staticPages.map((path) => `

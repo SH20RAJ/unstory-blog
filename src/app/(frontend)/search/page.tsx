@@ -1,11 +1,25 @@
 import { getDb } from "@/lib/db";
 import { ArticleCard } from "@/components/article/ArticleCard";
 import { Badge } from "@/components/ui/Badge";
+import { Metadata } from "next";
 
 export const dynamic = "force-dynamic";
 
 interface SearchPageProps {
   searchParams: Promise<{ q?: string }>;
+}
+
+export async function generateMetadata({ searchParams }: SearchPageProps): Promise<Metadata> {
+  const { q } = await searchParams;
+  const query = q || "";
+  return {
+    title: query ? `Search: ${query}` : "Search Intelligence",
+    description: `Search results for ${query || 'intelligence briefings'} on Unstory.`,
+    robots: {
+      index: false, // Search results shouldn't usually be indexed
+      follow: true,
+    }
+  };
 }
 
 export default async function SearchPage({ searchParams }: SearchPageProps) {

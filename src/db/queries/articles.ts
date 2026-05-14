@@ -1,4 +1,4 @@
-import { eq, desc, and, or, like, not, count } from "drizzle-orm";
+import { eq, desc, and, or, like, not, count, sql, asc } from "drizzle-orm";
 import { articles, authors, categories, mediaAssets } from "../schema";
 
 export function createArticlesQueries(db: any) {
@@ -151,6 +151,27 @@ export function createArticlesQueries(db: any) {
 
     async updateArticle(id: string, data: any) {
       return db.update(articles).set({ ...data, updatedAt: new Date() }).where(eq(articles.id, id)).returning();
+    },
+
+    async getPrevNextArticles(publishedAt: Date) {
+      const prev = await db
+        .select({ title: articles.title, slug: articles.slug })
+        .from(articles)
+        .where(and(eq(articles.status, "published"), sql`${articles.publishedAt} < ${publishedAt.getTime()}`))
+        .orderBy(desc(articles.publishedAt))
+        .limit(1);
+
+      const next = await db
+        .select({ title: articles.title, slug: articles.slug })
+        .from(articles)
+        .where(and(eq(articles.status, "published"), sql`${articles.publishedAt} > ${publishedAt.getTime()}`))
+        .orderBy(asc(articles.publishedAt))
+        .limit(1);
+
+      return {
+        prev: prev[0] || null,
+        next: next[0] || null,
+      };
     },
 
     async deleteArticle(id: string) {

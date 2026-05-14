@@ -1,5 +1,4 @@
 import { notFound } from "next/navigation";
-import Image from "next/image";
 import { getDb } from "@/lib/db";
 import { ArticleMeta } from "@/components/article/ArticleMeta";
 import { AuthorByline } from "@/components/article/AuthorByline";
@@ -8,6 +7,8 @@ import { Badge } from "@/components/ui/Badge";
 import { Metadata } from "next";
 import { SITE_CONFIG } from "@config";
 import Link from "next/link";
+import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
+import { PrevNextNavigation } from "@/components/article/PrevNextNavigation";
 
 export const dynamic = "force-dynamic";
 
@@ -40,11 +41,13 @@ export async function generateMetadata({ params }: ArticlePageProps): Promise<Me
       siteName: SITE_CONFIG.name,
       publishedTime: article.publishedAt?.toISOString?.() || undefined,
       modifiedTime: article.updatedAt?.toISOString?.() || undefined,
+      images: article.heroImageUrl ? [{ url: article.heroImageUrl }] : [],
     },
     twitter: {
       card: "summary_large_image",
       title,
       description,
+      images: article.heroImageUrl ? [article.heroImageUrl] : [],
     },
   };
 }
@@ -59,6 +62,9 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
   }
 
   const { articles: article, categories: category, authors: author } = result;
+  
+  // Fetch prev/next articles in parallel
+  const { prev, next } = await queries.articles.getPrevNextArticles(article.publishedAt || article.createdAt);
 
   // JSON-LD structured data for SEO
   const jsonLd = {
@@ -74,12 +80,42 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
       "@type": "Organization",
       name: SITE_CONFIG.name,
       url: SITE_CONFIG.url,
+      logo: {
+        "@type": "ImageObject",
+        url: `${SITE_CONFIG.url}/favicon.png`
+      }
     },
     mainEntityOfPage: {
       "@type": "WebPage",
       "@id": `${SITE_CONFIG.url}/article/${slug}`,
     },
     articleSection: category?.name || undefined,
+  };
+
+  // Breadcrumb structured data
+  const breadcrumbLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Dashboard",
+        "item": SITE_CONFIG.url
+      },
+      ...(category ? [{
+        "@type": "ListItem",
+        "position": 2,
+        "name": category.name,
+        "item": `${SITE_CONFIG.url}/category/${category.slug}`
+      }] : []),
+      {
+        "@type": "ListItem",
+        "position": category ? 3 : 2,
+        "name": article.title,
+        "item": `${SITE_CONFIG.url}/article/${article.slug}`
+      }
+    ]
   };
 
   return (
@@ -89,10 +125,21 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
+      />
 
       {/* Header Section */}
-      <header className="container mx-auto px-4 sm:px-6 lg:px-8 pt-16 lg:pt-24 pb-12 lg:pb-20 max-w-4xl text-center">
-        <div className="flex flex-col items-center space-y-6">
+      <header className="container mx-auto px-4 sm:px-6 lg:px-8 pt-16 lg:pt-24 pb-12 lg:pb-20 max-w-4xl">
+        <div className="flex flex-col items-center text-center space-y-6">
+          <Breadcrumbs 
+            items={[
+              ...(category ? [{ label: category.name, href: `/category/${category.slug}` }] : []),
+              { label: article.title, href: `/article/${article.slug}` }
+            ]} 
+          />
+
           {category && (
             <Badge variant="premium" className="px-4 py-1">
               {category.name}
@@ -139,8 +186,10 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
           <div className="lg:col-span-8 lg:col-start-3 space-y-12">
             <ArticleBody content={article.body} />
             
-            <div className="pt-16 border-t border-un-border">
+            <div className="pt-16 border-t border-un-border space-y-12">
               {author && <AuthorByline author={author} />}
+              
+              <PrevNextNavigation prev={prev} next={next} />
             </div>
           </div>
         </div>
@@ -166,7 +215,14 @@ async function RelatedArticlesSection({
   categoryName: string;
 }) {
   const { queries } = await getDb();
-  const related = await queries.articles.getRelatedArticles(currentSlug, categoryId, 3);
+  let related = await queries.articles.getRelatedArticles(currentSlug, categoryId, 3);
+  
+  // SEO Fallback: If no related articles in same category, show latest published articles
+  const isFallback = related.length === 0;
+  if (isFallback) {
+    const latest = await queries.articles.getPublishedArticles(4);
+    related = latest.filter((a: any) => a.slug !== currentSlug).slice(0, 3);
+  }
 
   if (related.length === 0) return null;
 
@@ -175,11 +231,24 @@ async function RelatedArticlesSection({
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
           <div className="space-y-4">
-            <Badge variant="premium">Strategic Intelligence</Badge>
+            <Badge variant="premium">
+              {isFallback ? "Fresh Intelligence" : "Strategic Intelligence"}
+            </Badge>
             <h2 className="text-3xl lg:text-4xl font-serif font-bold text-un-text">
-              Related Briefings in <span className="text-brand">{categoryName}</span>
+              {isFallback ? (
+                <>Latest <span className="text-brand">Briefings</span></>
+              ) : (
+                <>Related Briefings in <span className="text-brand">{categoryName}</span></>
+              )}
             </h2>
           </div>
+          
+          <Link 
+            href="/blogs" 
+            className="text-[10px] uppercase tracking-[0.3em] font-bold text-un-muted hover:text-brand transition-colors border-b border-un-border pb-1"
+          >
+            Explore Full Archive
+          </Link>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-12">

@@ -1,5 +1,15 @@
 import Link from "next/link";
 import { Badge } from "@/components/ui/Badge";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "404 - Briefing Not Found",
+  description: "The intelligence briefing you are looking for does not exist or has been moved.",
+  robots: {
+    index: false,
+    follow: true,
+  }
+};
 
 export default function NotFound() {
   return (

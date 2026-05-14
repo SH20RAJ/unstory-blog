@@ -89,6 +89,40 @@ export default function RootLayout({
             `,
           }}
         />
+        {/* Organization & Website JSON-LD */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Organization",
+              "name": SITE_CONFIG.name,
+              "url": SITE_CONFIG.url,
+              "logo": `${SITE_CONFIG.url}/favicon.png`,
+              "sameAs": [
+                "https://twitter.com/unstoryapp",
+                "https://linkedin.com/company/unstory",
+                "https://instagram.com/unstoryapp"
+              ]
+            })
+          }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "WebSite",
+              "url": SITE_CONFIG.url,
+              "name": SITE_CONFIG.name,
+              "potentialAction": {
+                "@type": "SearchAction",
+                "target": `${SITE_CONFIG.url}/search?q={search_term_string}`,
+                "query-input": "required name=search_term_string"
+              }
+            })
+          }}
+        />
       </head>
       <body className="min-h-screen flex flex-col bg-un-bg text-un-text">
         <SiteHeader />
