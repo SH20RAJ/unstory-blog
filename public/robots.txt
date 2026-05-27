@@ -1,7 +1,11 @@
 User-agent: *
 Allow: /
-Disallow: /studio
-Disallow: /api
+Disallow: /api/
+Disallow: /studio/
+Disallow: /admin/
+Disallow: /my-route/
+Disallow: /graphql/
+Disallow: /graphql-playground/
 
 Sitemap: https://unstory.app/sitemap.xml
-RSS: https://unstory.app/rss.xml
+Sitemap: https://unstory.app/news-sitemap.xml
