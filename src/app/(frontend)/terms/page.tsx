@@ -1,4 +1,18 @@
 import { StaticPageLayout } from "@/components/layout/StaticPageLayout";
+import { Metadata } from "next";
+import { SITE_CONFIG } from "@config";
+
+export const metadata: Metadata = {
+  title: "Terms of Service — Unstory",
+  description: "Unstory's terms of service. Usage restrictions, intellectual property, and disclaimers for our intelligence platform.",
+  alternates: { canonical: `${SITE_CONFIG.url}/terms` },
+  openGraph: {
+    title: "Terms of Service",
+    description: "Unstory's terms of service.",
+    url: `${SITE_CONFIG.url}/terms`,
+    siteName: SITE_CONFIG.name,
+  },
+};
 
 export default function TermsPage() {
   return (

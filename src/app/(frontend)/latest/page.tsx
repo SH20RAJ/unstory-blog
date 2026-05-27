@@ -1,6 +1,20 @@
 import { getDb } from "@/lib/db";
 import { ArticleCard } from "@/components/article/ArticleCard";
 import { Pagination } from "@/components/ui/Pagination";
+import { Metadata } from "next";
+import { SITE_CONFIG } from "@config";
+
+export const metadata: Metadata = {
+  title: "Latest Intelligence Briefings — Unstory",
+  description: "The latest strategic intelligence briefings covering AI, markets, business, and power shifts for founders and investors.",
+  alternates: { canonical: `${SITE_CONFIG.url}/latest` },
+  openGraph: {
+    title: "Latest Intelligence Briefings",
+    description: "The latest strategic intelligence briefings from Unstory.",
+    url: `${SITE_CONFIG.url}/latest`,
+    siteName: SITE_CONFIG.name,
+  },
+};
 
 export const dynamic = "force-dynamic";
 

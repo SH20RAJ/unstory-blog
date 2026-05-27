@@ -1,6 +1,20 @@
 import { getDb } from "@/lib/db";
 import { ArticleCard } from "@/components/article/ArticleCard";
 import { TrendingList } from "@/components/category/TrendingList";
+import { Metadata } from "next";
+import { SITE_CONFIG } from "@config";
+
+export const metadata: Metadata = {
+  title: "Trending Intelligence — Unstory",
+  description: "The stories and topics currently shaping the global landscape. Trending intelligence on AI, markets, business, and geopolitics.",
+  alternates: { canonical: `${SITE_CONFIG.url}/trending` },
+  openGraph: {
+    title: "Trending Intelligence",
+    description: "The stories and topics currently shaping the global landscape.",
+    url: `${SITE_CONFIG.url}/trending`,
+    siteName: SITE_CONFIG.name,
+  },
+};
 
 export const dynamic = "force-dynamic";
 

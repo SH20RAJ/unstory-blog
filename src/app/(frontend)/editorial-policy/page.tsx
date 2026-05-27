@@ -1,9 +1,17 @@
 import { StaticPageLayout } from "@/components/layout/StaticPageLayout";
 import { Metadata } from "next";
+import { SITE_CONFIG } from "@config";
 
 export const metadata: Metadata = {
-  title: "Editorial Policy",
+  title: "Editorial Policy — Unstory",
   description: "Our standards for strategic intelligence, sourcing, and reporting integrity.",
+  alternates: { canonical: `${SITE_CONFIG.url}/editorial-policy` },
+  openGraph: {
+    title: "Editorial Policy",
+    description: "Our standards for strategic intelligence, sourcing, and reporting integrity.",
+    url: `${SITE_CONFIG.url}/editorial-policy`,
+    siteName: SITE_CONFIG.name,
+  },
 };
 
 export default function EditorialPolicy() {

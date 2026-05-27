@@ -53,3 +53,4 @@ node_modules/
 .open-next
 .wranglerscratch/
 .env
+.wrangler/

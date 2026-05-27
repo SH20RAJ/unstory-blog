@@ -1,4 +1,18 @@
 import { StaticPageLayout } from "@/components/layout/StaticPageLayout";
+import { Metadata } from "next";
+import { SITE_CONFIG } from "@config";
+
+export const metadata: Metadata = {
+  title: "About Unstory — Strategic Intelligence Publication",
+  description: "Learn about Unstory's mission, methodology, and editorial standards. Strategic intelligence for founders, investors, and operators tracking AI, markets, and power shifts.",
+  alternates: { canonical: `${SITE_CONFIG.url}/about` },
+  openGraph: {
+    title: "About Unstory",
+    description: "Learn about Unstory's mission, methodology, and editorial standards.",
+    url: `${SITE_CONFIG.url}/about`,
+    siteName: SITE_CONFIG.name,
+  },
+};
 
 export default function AboutPage() {
   return (

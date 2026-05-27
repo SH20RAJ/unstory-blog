@@ -1,4 +1,18 @@
 import { StaticPageLayout } from "@/components/layout/StaticPageLayout";
+import { Metadata } from "next";
+import { SITE_CONFIG } from "@config";
+
+export const metadata: Metadata = {
+  title: "Contact Us — Unstory",
+  description: "Get in touch with the Unstory team. Editorial inquiries, tips, and partnership proposals.",
+  alternates: { canonical: `${SITE_CONFIG.url}/contact` },
+  openGraph: {
+    title: "Contact Us",
+    description: "Get in touch with the Unstory team.",
+    url: `${SITE_CONFIG.url}/contact`,
+    siteName: SITE_CONFIG.name,
+  },
+};
 
 export default function ContactPage() {
   return (

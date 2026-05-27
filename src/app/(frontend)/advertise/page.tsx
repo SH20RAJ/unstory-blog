@@ -1,4 +1,18 @@
 import { StaticPageLayout } from "@/components/layout/StaticPageLayout";
+import { Metadata } from "next";
+import { SITE_CONFIG } from "@config";
+
+export const metadata: Metadata = {
+  title: "Advertise — Reach Founders, Investors & Operators | Unstory",
+  description: "Partner with Unstory to reach a high-intent audience of founders, investors, and technologists. Sponsored briefings, newsletter sponsorship, and custom intelligence.",
+  alternates: { canonical: `${SITE_CONFIG.url}/advertise` },
+  openGraph: {
+    title: "Advertise with Unstory",
+    description: "Reach a high-intent audience of founders, investors, and technologists.",
+    url: `${SITE_CONFIG.url}/advertise`,
+    siteName: SITE_CONFIG.name,
+  },
+};
 
 export default function AdvertisePage() {
   return (

@@ -1,9 +1,17 @@
 import { StaticPageLayout } from "@/components/layout/StaticPageLayout";
 import { Metadata } from "next";
+import { SITE_CONFIG } from "@config";
 
 export const metadata: Metadata = {
-  title: "Research Methodology",
+  title: "Research Methodology — Unstory",
   description: "How Unstory analyzes markets, AI, and power shifts through a rigorous, multi-layered framework.",
+  alternates: { canonical: `${SITE_CONFIG.url}/methodology` },
+  openGraph: {
+    title: "Research Methodology",
+    description: "How Unstory analyzes markets, AI, and power shifts through a rigorous, multi-layered framework.",
+    url: `${SITE_CONFIG.url}/methodology`,
+    siteName: SITE_CONFIG.name,
+  },
 };
 
 export default function MethodologyPage() {

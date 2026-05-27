@@ -80,7 +80,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
   // JSON-LD structured data for SEO
   const jsonLd = {
     "@context": "https://schema.org",
-    "@type": article.contentType === "news" ? "NewsArticle" : "Article",
+    "@type": article.contentType === "news" || article.contentType === "fact_check" ? "NewsArticle" : "Article",
     headline: article.title,
     description: article.seoDescription || article.excerpt,
     image: article.heroImageUrl ? [article.heroImageUrl] : [],

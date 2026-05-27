@@ -24,19 +24,13 @@ const nextConfig = {
     ignoreDuringBuilds: true,
   },
 
-  // Google site verification via env
-  env: {
-    NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION || '',
-  },
-
   async headers() {
     return [
       {
-        source: '/(.*)',
+        source: '/:path*',
         headers: [
           { key: 'X-Content-Type-Options', value: 'nosniff' },
           { key: 'X-Frame-Options', value: 'DENY' },
-          { key: 'X-XSS-Protection', value: '1; mode=block' },
           { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
         ],
       },
@@ -47,15 +41,9 @@ const nextConfig = {
         ],
       },
       {
-        source: '/news-sitemap.xml',
-        headers: [
-          { key: 'Cache-Control', value: 'public, s-maxage=3600, stale-while-revalidate=86400' },
-        ],
-      },
-      {
         source: '/robots.txt',
         headers: [
-          { key: 'Cache-Control', value: 'public, max-age=86400, s-maxage=86400' },
+          { key: 'Cache-Control', value: 'public, s-maxage=86400, stale-while-revalidate=86400' },
         ],
       },
       {
@@ -63,6 +51,16 @@ const nextConfig = {
         headers: [
           { key: 'Cache-Control', value: 'public, s-maxage=3600, stale-while-revalidate=86400' },
         ],
+      },
+    ];
+  },
+
+  async redirects() {
+    return [
+      {
+        source: '/indexnow',
+        destination: '/',
+        permanent: false,
       },
     ];
   },

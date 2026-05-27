@@ -2,6 +2,20 @@ import { getDb } from "@/lib/db";
 import { ArticleCard } from "@/components/article/ArticleCard";
 import { Pagination } from "@/components/ui/Pagination";
 import { Badge } from "@/components/ui/Badge";
+import { Metadata } from "next";
+import { SITE_CONFIG } from "@config";
+
+export const metadata: Metadata = {
+  title: "Intelligence Archive — All Briefings | Unstory",
+  description: "A comprehensive repository of strategic intelligence briefings covering AI, markets, business, power, lifestyle, and skills.",
+  alternates: { canonical: `${SITE_CONFIG.url}/blogs` },
+  openGraph: {
+    title: "Intelligence Archive — All Briefings",
+    description: "A comprehensive repository of strategic intelligence briefings.",
+    url: `${SITE_CONFIG.url}/blogs`,
+    siteName: SITE_CONFIG.name,
+  },
+};
 
 export const dynamic = "force-dynamic";
 

@@ -41,14 +41,20 @@ export function IntelligenceFooter({ article, author, sources = [] }: Intelligen
                 <span className="text-[10px] uppercase tracking-widest text-un-muted font-bold flex items-center gap-2">
                   <ShieldCheck className="w-3 h-3 text-brand" /> Trust Score
                 </span>
-                <div className="text-3xl font-bold text-white">{article.trustScore || 100}%</div>
+                <div className="text-3xl font-bold text-white">
+                  {article.trustScore != null && article.trustScore >= 70
+                    ? `${article.trustScore}%`
+                    : "Pending Review"}
+                </div>
               </div>
               <div className="space-y-2">
                 <span className="text-[10px] uppercase tracking-widest text-un-muted font-bold flex items-center gap-2">
                   <Scale className="w-3 h-3 text-brand" /> Verification
                 </span>
                 <div className="text-sm font-bold text-brand uppercase tracking-widest">
-                  {(article.factCheckStatus || "unverified").replace(/_/g, " ").replace(/\b\w/g, (c: string) => c.toUpperCase())}
+                  {article.factCheckStatus
+                    ? article.factCheckStatus.replace(/_/g, " ").replace(/\b\w/g, (c: string) => c.toUpperCase())
+                    : "Under Review"}
                 </div>
               </div>
             </div>
@@ -70,6 +76,11 @@ export function IntelligenceFooter({ article, author, sources = [] }: Intelligen
               <div className="pt-6 border-t border-un-border">
                 <p className="text-[10px] text-un-muted italic leading-relaxed">
                   <strong className="not-italic">Disclaimer:</strong> This content is for informational and educational purposes only and does not constitute financial, legal, or medical advice. Always consult qualified professionals before making financial or legal decisions. See our <Link href="/editorial-policy" className="text-brand hover:underline">Editorial Policy</Link> for details.
+                </p>
+              </div>
+              <div className="p-4 bg-brand/5 border border-brand/10 rounded-lg">
+                <p className="text-xs text-un-muted leading-relaxed">
+                  <strong className="text-un-text">Disclaimer:</strong> This content is for informational and educational purposes only and does not constitute financial, legal, medical, or investment advice. Always consult qualified professionals before making decisions. See our <Link href="/editorial-policy" className="text-brand hover:underline">Editorial Policy</Link>.
                 </p>
               </div>
             </div>
@@ -110,7 +121,7 @@ export function IntelligenceFooter({ article, author, sources = [] }: Intelligen
             ) : (
               <div className="p-6 bg-un-bg/30 border border-un-border border-dashed rounded-xl">
                 <p className="text-xs text-un-muted font-serif italic text-center">
-                  Sources for this briefing are being reviewed. Our editorial team is verifying all claims according to our <Link href="/fact-checking-policy" className="text-brand hover:underline">Fact-Checking Protocol</Link>.
+                Sources for this briefing are being compiled and verified. Our editorial team reviews all sources according to our <Link href="/fact-checking-policy" className="text-brand hover:underline">Fact-Checking Protocol</Link>.
                 </p>
               </div>
             )}

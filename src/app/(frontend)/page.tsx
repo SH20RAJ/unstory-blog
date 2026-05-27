@@ -37,7 +37,9 @@ export default async function HomePage() {
     wealthArticles,
     aiArticles,
     businessArticles,
-    powerArticles
+    powerArticles,
+    lifestyleArticles,
+    skillsArticles,
   ] = await Promise.all([
     queries.articles.getPublishedArticles(10),
     queries.topics.getTrendingTopics(6),
@@ -45,6 +47,8 @@ export default async function HomePage() {
     queries.articles.getArticlesByCategory("ai", 4),
     queries.articles.getArticlesByCategory("business", 4),
     queries.articles.getArticlesByCategory("power", 4),
+    queries.articles.getArticlesByCategory("lifestyle", 4),
+    queries.articles.getArticlesByCategory("skills", 4),
   ]);
 
   const featured = publishedArticles[0];
@@ -102,10 +106,20 @@ export default async function HomePage() {
           slug="business" 
           articles={businessArticles} 
         />
-        <CategorySection 
-          title="Power & Geopolitics" 
-          slug="power" 
-          articles={powerArticles} 
+        <CategorySection
+          title="Power & Geopolitics"
+          slug="power"
+          articles={powerArticles}
+        />
+        <CategorySection
+          title="Lifestyle & Luxury"
+          slug="lifestyle"
+          articles={lifestyleArticles}
+        />
+        <CategorySection
+          title="High-Income Skills"
+          slug="skills"
+          articles={skillsArticles}
         />
       </div>
 

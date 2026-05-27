@@ -1,9 +1,17 @@
 import { StaticPageLayout } from "@/components/layout/StaticPageLayout";
 import { Metadata } from "next";
+import { SITE_CONFIG } from "@config";
 
 export const metadata: Metadata = {
-  title: "Fact-Checking Policy",
+  title: "Fact-Checking Policy — Unstory",
   description: "Our rigorous methodology for verifying claims, data, and intelligence sources.",
+  alternates: { canonical: `${SITE_CONFIG.url}/fact-checking-policy` },
+  openGraph: {
+    title: "Fact-Checking Policy",
+    description: "Our rigorous methodology for verifying claims, data, and intelligence sources.",
+    url: `${SITE_CONFIG.url}/fact-checking-policy`,
+    siteName: SITE_CONFIG.name,
+  },
 };
 
 export default function FactCheckingPolicy() {

@@ -64,6 +64,9 @@ export default function RootLayout({
     <html lang="en" className={`${dmSans.variable} ${lora.variable}`}>
       <head>
         <meta name="google-adsense-account" content="ca-pub-1828915420581549" />
+        {process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION && (
+          <meta name="google-site-verification" content={process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION} />
+        )}
         <script
           async
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1828915420581549"
