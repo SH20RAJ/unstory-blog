@@ -48,7 +48,7 @@ export function IntelligenceFooter({ article, author, sources = [] }: Intelligen
                   <Scale className="w-3 h-3 text-brand" /> Verification
                 </span>
                 <div className="text-sm font-bold text-brand uppercase tracking-widest">
-                  {article.factCheckStatus || "Verified Intelligence"}
+                  {(article.factCheckStatus || "unverified").replace(/_/g, " ").replace(/\b\w/g, (c: string) => c.toUpperCase())}
                 </div>
               </div>
             </div>
@@ -64,6 +64,13 @@ export function IntelligenceFooter({ article, author, sources = [] }: Intelligen
                 <Link href="/methodology" className="text-[10px] uppercase tracking-widest text-un-muted hover:text-white transition-colors flex items-center gap-1 font-bold">
                   Research Methodology <ArrowRight className="w-3 h-3" />
                 </Link>
+              </div>
+
+              {/* YMYL Disclaimer */}
+              <div className="pt-6 border-t border-un-border">
+                <p className="text-[10px] text-un-muted italic leading-relaxed">
+                  <strong className="not-italic">Disclaimer:</strong> This content is for informational and educational purposes only and does not constitute financial, legal, or medical advice. Always consult qualified professionals before making financial or legal decisions. See our <Link href="/editorial-policy" className="text-brand hover:underline">Editorial Policy</Link> for details.
+                </p>
               </div>
             </div>
           </div>
@@ -103,7 +110,7 @@ export function IntelligenceFooter({ article, author, sources = [] }: Intelligen
             ) : (
               <div className="p-6 bg-un-bg/30 border border-un-border border-dashed rounded-xl">
                 <p className="text-xs text-un-muted font-serif italic text-center">
-                  This briefing is based on proprietary Unstory Intelligence datasets and verified primary sources including SEC filings, market data, and official disclosures.
+                  Sources for this briefing are being reviewed. Our editorial team is verifying all claims according to our <Link href="/fact-checking-policy" className="text-brand hover:underline">Fact-Checking Protocol</Link>.
                 </p>
               </div>
             )}
