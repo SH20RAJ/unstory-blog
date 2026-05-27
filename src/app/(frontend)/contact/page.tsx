@@ -3,14 +3,19 @@ import { Metadata } from "next";
 import { SITE_CONFIG } from "@config";
 
 export const metadata: Metadata = {
-  title: "Contact Us — Unstory",
-  description: "Get in touch with the Unstory team. Editorial inquiries, tips, and partnership proposals.",
+  title: "Contact Us",
+  description: "Get in touch with Unstory for editorial inquiries, tips, and partnership opportunities.",
   alternates: { canonical: `${SITE_CONFIG.url}/contact` },
   openGraph: {
-    title: "Contact Us",
-    description: "Get in touch with the Unstory team.",
+    title: `Contact | ${SITE_CONFIG.name}`,
+    description: "Get in touch with Unstory for editorial inquiries, tips, and partnership opportunities.",
     url: `${SITE_CONFIG.url}/contact`,
     siteName: SITE_CONFIG.name,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `Contact | ${SITE_CONFIG.name}`,
+    description: "Get in touch with Unstory for editorial inquiries, tips, and partnership opportunities.",
   },
   robots: { index: true, follow: true },
 };

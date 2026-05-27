@@ -1,133 +1,144 @@
 # Google Indexing & Monetization Fix Report
 
-Generated: 2026-05-27
+**Date:** 2026-05-27
+**Site:** https://unstory.app
+**Status:** Phase 1 fixes applied
 
-## Root Cause Analysis
+---
 
-### Why Google barely indexes Unstory
+## Root Cause Analysis — Why Google Barely Indexes Unstory
 
-1. **Conflicting robots.txt**: Two sources of truth (public/robots.txt and src/app/robots.txt/route.ts) with different rules. The static file was less restrictive.
-2. **Test/sample content in sitemap**: Sitemap included draft/test articles with low trust scores, diluting crawl budget.
-3. **Missing metadata**: Most pages (blogs, latest, trending, about, contact, privacy, advertise) had no metadata exports — Google couldn't generate proper snippets.
-4. **No canonical URLs on static pages**: Only article and category pages had canonicals.
-5. **Low-quality content indexed**: Articles with trust scores < 70 and "unverified" fact-check status were publicly accessible and indexable.
-6. **Missing Google verification**: No google-site-verification meta tag mechanism.
-7. **Sitemap returned 500 on DB errors**: No error handling meant broken sitemap during DB issues.
-8. **Fake source claims**: "Verified primary sources including SEC filings" shown even when no sources existed — damages E-E-A-T.
+### 1. Conflicting robots.txt
+- **Problem:** Two robots.txt files existed (`public/robots.txt` static + `src/app/robots.txt/route.ts` dynamic). The static one took precedence and was less complete.
+- **Fix:** Deleted static file, updated dynamic route with full disallow rules and sitemap references.
 
-## What Was Fixed
+### 2. Sitemap Including Low-Quality Pages
+- **Problem:** Sitemap included all published articles without quality filtering — test articles, thin content, low-trust articles.
+- **Fix:** Added filters for body length (≥900 chars), trust score (≥70), and test/demo/sample slug exclusion.
 
-### Phase 1: Indexability
-- Consolidated robots.txt to single source (route.ts)
-- Added proper Disallow rules for /api/, /studio/, /admin/, /search, /graphql/
-- Added news-sitemap.xml reference to robots.txt
-- Removed conflicting public/robots.txt
+### 3. Test Articles Publicly Visible
+- **Problem:** `getArticleBySlug` returned ANY article by slug, including drafts and test articles. Public pages could render test content.
+- **Fix:** Created `getPublicArticleBySlug` with strict filters: status=published, excludes test/demo/sample slugs and titles.
 
-### Phase 2: Sitemap Quality
-- Sitemap filters out test articles (slug/title matching)
-- Sitemap filters out articles with trustScore < 70
-- Sitemap filters out articles with body < 4500 chars (~900 words)
-- URL deduplication added
-- XML character escaping added
-- Try/catch with valid fallback XML
-- News sitemap filters by contentType and factCheckStatus
-- RSS filters out test articles
+### 4. Missing Metadata on Static Pages
+- **Problem:** 12+ static pages (about, contact, privacy, terms, etc.) had no metadata exports — no title, description, canonical, or OG tags.
+- **Fix:** Added proper Metadata exports with title, description, canonical URL, OpenGraph, and Twitter cards.
 
-### Phase 3: Article Access Control
-- New `getPublicArticleBySlug()` method that only returns published, non-test articles
-- All public queries filter out test/sample content
-- Article page uses public-only query
+### 5. False E-E-A-T Claims
+- **Problem:** Articles claimed "Verified Intelligence" even when factCheckStatus was null. Empty source sections claimed "verified primary sources including SEC filings" — a false claim.
+- **Fix:** Show actual factCheckStatus. Replace false source claims with "Sources being reviewed." Added YMYL disclaimers.
 
-### Phase 4: Metadata
-- Added metadata to: homepage, blogs, latest, trending, about, contact, privacy, advertise, terms, editorial-policy, corrections-policy, fact-checking-policy, methodology
-- All pages have canonical URLs
-- Search page has noindex
-- Low-trust articles get noindex via robots meta
+### 6. NewsArticle Schema on Non-News Content
+- **Problem:** All articles used `"@type": "NewsArticle"` JSON-LD, even evergreen guides and analysis.
+- **Fix:** Conditional schema: `NewsArticle` for news content_type, `Article` for everything else.
 
-### Phase 5: E-E-A-T / Trust
-- Fixed trust score display (shows "Pending Review" for null/low scores)
-- Fixed verification status display (shows "Under Review" for null)
-- Changed misleading source claim to honest "sources being compiled"
-- Added universal disclaimer for informational content
-- JSON-LD schema type changed: NewsArticle only for news/fact_check, Article for others
-- Added Google site verification meta tag support
+### 7. Low-Trust Articles Were Indexable
+- **Problem:** Articles with trustScore < 70 were fully indexable.
+- **Fix:** Added noindex robots directive for articles with trustScore < 70.
 
-### Phase 6: AdSense
-- AdSlot component with client-side rendering, CLS prevention, and label
-- AdPlacement component with trust-score gating
-- Ads only show on articles with trustScore >= 70
-- ads.txt verified correct
-- Env-based slot configuration
+### 8. News Sitemap Included Non-News Content
+- **Problem:** News sitemap included guides, opinion, and unverified articles.
+- **Fix:** Filtered to only include recent (48h) news/analysis content with verified fact-check status.
 
-### Phase 7: Monetization Infrastructure
-- monetization.ts config with categories, disclosure, topic mapping
-- AffiliateDisclosure component
-- Money keyword plan with 30 target articles
+### 9. RSS Included Test Content
+- **Problem:** RSS feed had no quality filtering.
+- **Fix:** Added test/demo/sample slug exclusion to RSS.
 
-### Phase 8: Internal Linking
-- internal-links.ts utility
-- Homepage expanded with lifestyle and skills sections
-
-### Phase 9: Build Quality
-- Security headers added to next.config.ts
-- Cache headers for sitemap, robots, RSS
-- /indexnow redirect to / (was a public-facing debug page)
-- SEO audit script added
+---
 
 ## Files Changed
 
 | File | Change |
 |------|--------|
-| `src/app/robots.txt/route.ts` | Rewritten with proper disallow rules |
-| `public/robots.txt` | Deleted (duplicate) |
-| `src/app/sitemap.xml/route.ts` | Quality filters, error handling, dedup |
-| `src/app/news-sitemap.xml/route.ts` | Content type filtering, trust filtering, XML escaping |
-| `src/app/rss.xml/route.ts` | Test article filtering, CDATA escaping, error handling |
-| `src/db/queries/articles.ts` | Added getPublicArticleBySlug, test filtering |
-| `src/app/(frontend)/article/[slug]/page.tsx` | Public query, noindex low-trust, schema type fix |
-| `src/app/(frontend)/page.tsx` | Metadata + homepage sections |
-| `src/app/(frontend)/layout.tsx` | Google verification meta tag |
+| `public/robots.txt` | **Deleted** (was conflicting with dynamic route) |
+| `src/app/robots.txt/route.ts` | Updated disallow rules, added news-sitemap reference |
+| `src/app/sitemap.xml/route.ts` | Added try/catch, quality filters, cache headers |
+| `src/app/news-sitemap.xml/route.ts` | Added try/catch, content type filtering, empty fallback |
+| `src/app/rss.xml/route.ts` | Added try/catch, test content filtering |
+| `src/db/queries/articles.ts` | Added `getPublicArticleBySlug`, test filters on all queries |
+| `src/app/(frontend)/article/[slug]/page.tsx` | Use public query, conditional schema, noindex low-trust |
+| `src/app/(frontend)/page.tsx` | Added metadata, more category sections |
+| `src/app/(frontend)/layout.tsx` | Added Google verification meta tag |
+| `src/components/article/IntelligenceFooter.tsx` | Fixed trust display, added YMYL disclaimer |
 | `src/app/(frontend)/blogs/page.tsx` | Added metadata |
 | `src/app/(frontend)/latest/page.tsx` | Added metadata |
 | `src/app/(frontend)/trending/page.tsx` | Added metadata |
 | `src/app/(frontend)/about/page.tsx` | Added metadata |
 | `src/app/(frontend)/contact/page.tsx` | Added metadata |
 | `src/app/(frontend)/privacy/page.tsx` | Added metadata |
-| `src/app/(frontend)/advertise/page.tsx` | Added metadata |
 | `src/app/(frontend)/terms/page.tsx` | Added metadata |
-| `src/app/(frontend)/editorial-policy/page.tsx` | Enhanced metadata |
+| `src/app/(frontend)/advertise/page.tsx` | Added metadata |
 | `src/app/(frontend)/corrections-policy/page.tsx` | Added metadata |
 | `src/app/(frontend)/fact-checking-policy/page.tsx` | Added metadata |
 | `src/app/(frontend)/methodology/page.tsx` | Added metadata |
-| `src/components/article/IntelligenceFooter.tsx` | Trust display fixes, disclaimer, honest sourcing |
-| `src/config/monetization.ts` | New: monetization config |
-| `src/components/monetization/AffiliateDisclosure.tsx` | New: disclosure component |
-| `src/components/ads/AdSlot.tsx` | New: AdSense slot component |
-| `src/components/ads/AdPlacement.tsx` | New: Ad placement with trust gating |
-| `src/lib/internal-links.ts` | New: internal linking utility |
-| `next.config.ts` | Security headers, cache headers, redirects |
-| `scripts/seo-audit.mjs` | New: local SEO audit script |
-| `docs/GOOGLE-SEARCH-CONSOLE-CHECKLIST.md` | New: GSC setup checklist |
-| `docs/content/money-keyword-plan.md` | New: 30 money keyword targets |
-| `docs/internal/google-indexing-money-fix-report.md` | This report |
+| `src/app/(frontend)/indexnow/page.tsx` | Added noindex metadata |
+| `src/components/ads/AdSlot.tsx` | **New** — AdSense slot component |
+| `src/components/ads/AdPlacement.tsx` | **New** — Safe ad placement with trust checks |
+| `src/components/ads/index.ts` | **New** — Barrel export |
+| `src/config/monetization.ts` | **New** — Monetization config |
+| `src/components/monetization/AffiliateDisclosure.tsx` | **New** — Disclosure component |
+| `src/components/monetization/index.ts` | **New** — Barrel export |
+| `next.config.ts` | Added security headers and cache headers |
+| `scripts/seo-audit.mjs` | **New** — Local SEO audit script |
+| `scripts/submit-indexnow.mjs` | **New** — IndexNow submission script |
+| `docs/content/money-keyword-plan.md` | **New** — 50 high-CPC keyword targets |
+| `docs/GOOGLE-SEARCH-CONSOLE-CHECKLIST.md` | **New** — Step-by-step GSC setup guide |
+| `docs/internal/google-indexing-money-fix-report.md` | **This file** |
+
+---
+
+## AdSense Implementation
+
+- **Publisher ID:** `ca-pub-1828915420581549`
+- **ads.txt:** Verified correct at `public/ads.txt`
+- **AdSlot component:** Client-side, useEffect-based, no SSR crash
+- **AdPlacement component:** Trust-aware — won't show on:
+  - Articles with trustScore < 70
+  - Unverified YMYL articles
+  - Admin/studio/search pages
+- **Slot configuration:** Via environment variables (no hardcoded slot IDs)
+
+---
 
 ## Remaining Manual Steps
 
-### Google Search Console
-1. Add unstory.app property in GSC
-2. Verify via `NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION` env var
-3. Submit sitemap.xml
-4. Inspect and request indexing for top pages
-5. Monitor coverage reports weekly
+### Immediate (do today):
+1. [ ] Add `unstory.app` property in Google Search Console
+2. [ ] Verify ownership via meta tag (set `NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION`)
+3. [ ] Submit `https://unstory.app/sitemap.xml` in GSC
+4. [ ] Submit `https://unstory.app/news-sitemap.xml` in GSC
+5. [ ] Inspect and request indexing for homepage
+6. [ ] Inspect and request indexing for 5 best article URLs
+7. [ ] Request indexing for /about, /advertise, /blogs
 
-### AdSense
-1. Create AdSense ad units for each slot (top, mid-article, after-article, sidebar, archive)
-2. Set slot IDs in env vars (NEXT_PUBLIC_ADSENSE_SLOT_*)
-3. Wait for AdSense approval on new pages
-4. Monitor policy center
+### This Week:
+8. [ ] Check GSC Pages report for indexing issues
+9. [ ] Fix any "Crawled — not indexed" pages
+10. [ ] Fix any "Duplicate without canonical" issues
+11. [ ] Create AdSense ad units and set environment variables:
+    - `NEXT_PUBLIC_ADSENSE_SLOT_TOP`
+    - `NEXT_PUBLIC_ADSENSE_SLOT_MID_ARTICLE`
+    - `NEXT_PUBLIC_ADSENSE_SLOT_AFTER_ARTICLE`
+    - `NEXT_PUBLIC_ADSENSE_SLOT_SIDEBAR`
+    - `NEXT_PUBLIC_ADSENSE_SLOT_ARCHIVE`
+12. [ ] Integrate AdPlacement components into article/category pages
 
-### Content
-1. Write 10 money articles from the keyword plan
-2. Ensure each has 1500+ words, sources, and editorial review
-3. Add affiliate links only to relevant, reviewed content
-4. Build newsletter subscriber base
+### This Month:
+13. [ ] Create first 3 money articles from the keyword plan
+14. [ ] Set up IndexNow key and submit priority pages
+15. [ ] Monitor search impressions and clicks weekly
+16. [ ] Build internal linking between related articles
+17. [ ] Consider building backlinks through guest posting or partnerships
+
+---
+
+## What NOT to Do
+
+- Do not buy traffic or use bots
+- Do not create doorway pages
+- Do not keyword-stuff
+- Do not publish fake/unverified financial advice
+- Do not use hidden text or links
+- Do not scrape content from other sites
+- Do not participate in link schemes
+- Do not use cloaking or sneaky redirects

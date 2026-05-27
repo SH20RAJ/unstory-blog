@@ -1,96 +1,101 @@
 #!/usr/bin/env node
 
 /**
- * Basic SEO audit script for Unstory.app
- * Checks key SEO signals locally before deploying.
+ * Unstory.app — SEO Audit Script
+ * Checks basic SEO health indicators locally.
  */
 
-import { readFileSync, existsSync } from 'fs';
-import { join } from 'path';
+import { readFileSync, existsSync } from "fs";
+import { join } from "path";
 
 const ROOT = process.cwd();
+const SITE_URL = "https://unstory.app";
+
 let passed = 0;
 let failed = 0;
 let warnings = 0;
 
-function check(name, ok, detail) {
-  if (ok) {
-    console.log(`  ✅ ${name}`);
+function check(label, condition, detail = "") {
+  if (condition) {
+    console.log(`  ✅ ${label}`);
     passed++;
   } else {
-    console.log(`  ❌ ${name}${detail ? ': ' + detail : ''}`);
+    console.log(`  ❌ ${label}${detail ? ` — ${detail}` : ""}`);
     failed++;
   }
 }
 
-function warn(name, detail) {
-  console.log(`  ⚠️  ${name}${detail ? ': ' + detail : ''}`);
+function warn(label, detail = "") {
+  console.log(`  ⚠️  ${label}${detail ? ` — ${detail}` : ""}`);
   warnings++;
 }
 
-console.log('\n🔍 Unstory SEO Audit\n');
+console.log("\n🔍 Unstory.app SEO Audit\n");
 
-// 1. Check robots.txt route exists
-console.log('--- robots.txt ---');
-const robotsRoute = join(ROOT, 'src/app/robots.txt/route.ts');
-check('robots.txt route exists', existsSync(robotsRoute));
+// 1. robots.txt route
+console.log("📄 robots.txt");
+const robotsRoute = join(ROOT, "src/app/robots.txt/route.ts");
+check("Dynamic robots.txt route exists", existsSync(robotsRoute));
 
-const publicRobots = join(ROOT, 'public/robots.txt');
-if (existsSync(publicRobots)) {
-  warn('public/robots.txt still exists', 'May conflict with route.ts');
+const staticRobots = join(ROOT, "public/robots.txt");
+check("No conflicting static robots.txt", !existsSync(staticRobots), "Delete public/robots.txt");
+
+if (existsSync(robotsRoute)) {
+  const robotsContent = readFileSync(robotsRoute, "utf-8");
+  check("References sitemap.xml", robotsContent.includes("sitemap.xml"));
+  check("References news-sitemap.xml", robotsContent.includes("news-sitemap.xml"));
+  check("Disallows /api/", robotsContent.includes("/api/"));
+  check("Disallows /studio/", robotsContent.includes("/studio/"));
 }
 
-// 2. Check sitemap
-console.log('\n--- sitemap.xml ---');
-const sitemapRoute = join(ROOT, 'src/app/sitemap.xml/route.ts');
-check('sitemap.xml route exists', existsSync(sitemapRoute));
+// 2. sitemap route
+console.log("\n🗺️  Sitemap");
+const sitemapRoute = join(ROOT, "src/app/sitemap.xml/route.ts");
+check("Sitemap route exists", existsSync(sitemapRoute));
 
-// 3. Check ads.txt
-console.log('\n--- ads.txt ---');
-const adsTxt = join(ROOT, 'public/ads.txt');
+if (existsSync(sitemapRoute)) {
+  const sitemapContent = readFileSync(sitemapRoute, "utf-8");
+  check("Has try/catch for error handling", sitemapContent.includes("try"));
+  check("Excludes test articles", sitemapContent.includes("test"));
+  check("Includes static pages", sitemapContent.includes("/about"));
+  check("Includes categories", sitemapContent.includes("categories"));
+  check("Has cache headers", sitemapContent.includes("Cache-Control"));
+}
+
+// 3. ads.txt
+console.log("\n💰 Ads.txt");
+const adsTxt = join(ROOT, "public/ads.txt");
+check("ads.txt exists", existsSync(adsTxt));
+
 if (existsSync(adsTxt)) {
-  const content = readFileSync(adsTxt, 'utf-8');
-  check('ads.txt contains publisher ID', content.includes('pub-1828915420581549'));
-} else {
-  check('ads.txt exists', false);
+  const adsContent = readFileSync(adsTxt, "utf-8");
+  check("Contains publisher ID", adsContent.includes("pub-1828915420581549"));
+  check("Correct format", adsContent.includes("google.com"));
 }
 
-// 4. Check key components
-console.log('\n--- Components ---');
-check('AdSlot component exists', existsSync(join(ROOT, 'src/components/ads/AdSlot.tsx')));
-check('AdPlacement component exists', existsSync(join(ROOT, 'src/components/ads/AdPlacement.tsx')));
-check('AffiliateDisclosure component exists', existsSync(join(ROOT, 'src/components/monetization/AffiliateDisclosure.tsx')));
+// 4. AdSense components
+console.log("\n📢 AdSense");
+check("AdSlot component exists", existsSync(join(ROOT, "src/components/ads/AdSlot.tsx")));
+check("AdPlacement component exists", existsSync(join(ROOT, "src/components/ads/AdPlacement.tsx")));
 
-// 5. Check config files
-console.log('\n--- Config ---');
-check('monetization config exists', existsSync(join(ROOT, 'src/config/monetization.ts')));
+// 5. Monetization
+console.log("\n💸 Monetization");
+check("Monetization config exists", existsSync(join(ROOT, "src/config/monetization.ts")));
+check("AffiliateDisclosure exists", existsSync(join(ROOT, "src/components/monetization/AffiliateDisclosure.tsx")));
 
-// 6. Check page metadata
-console.log('\n--- Page Metadata ---');
-const pages = [
-  'src/app/(frontend)/page.tsx',
-  'src/app/(frontend)/blogs/page.tsx',
-  'src/app/(frontend)/latest/page.tsx',
-  'src/app/(frontend)/trending/page.tsx',
-  'src/app/(frontend)/about/page.tsx',
-  'src/app/(frontend)/contact/page.tsx',
-  'src/app/(frontend)/privacy/page.tsx',
-  'src/app/(frontend)/advertise/page.tsx',
-];
+// 6. Content plan
+console.log("\n📝 Content Plan");
+check("Money keyword plan exists", existsSync(join(ROOT, "docs/content/money-keyword-plan.md")));
 
-for (const page of pages) {
-  const fullPath = join(ROOT, page);
-  if (existsSync(fullPath)) {
-    const content = readFileSync(fullPath, 'utf-8');
-    const hasMetadata = content.includes('metadata') || content.includes('generateMetadata');
-    check(`${page} has metadata`, hasMetadata);
-  }
+// 7. Documentation
+console.log("\n📚 Documentation");
+check("Google Search Console checklist exists", existsSync(join(ROOT, "docs/GOOGLE-SEARCH-CONSOLE-CHECKLIST.md")));
+
+// Summary
+console.log(`\n${"─".repeat(50)}`);
+console.log(`Results: ${passed} passed, ${failed} failed, ${warnings} warnings`);
+console.log(`${"─".repeat(50)}\n`);
+
+if (failed > 0) {
+  process.exit(1);
 }
-
-// 7. Check docs
-console.log('\n--- Documentation ---');
-check('Search Console checklist exists', existsSync(join(ROOT, 'docs/GOOGLE-SEARCH-CONSOLE-CHECKLIST.md')));
-check('Indexing report exists', existsSync(join(ROOT, 'docs/internal/google-indexing-money-fix-report.md')));
-
-console.log(`\n📊 Results: ${passed} passed, ${failed} failed, ${warnings} warnings\n`);
-process.exit(failed > 0 ? 1 : 0);

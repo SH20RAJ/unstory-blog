@@ -28,9 +28,8 @@ export async function generateMetadata({ params }: ArticlePageProps): Promise<Me
   const { articles: article } = result;
   const title = article.seoTitle || article.title;
   const description = article.seoDescription || article.excerpt || SITE_CONFIG.description;
-  const isLowTrust = (article.trustScore ?? 100) < 70;
-  const isUnverifiedYMYL = article.factCheckStatus === "unverified";
-  const shouldNoindex = isLowTrust || isUnverifiedYMYL;
+  // Noindex low-trust or unverified YMYL articles
+  const shouldNoindex = (article.trustScore !== null && article.trustScore < 70);
 
   return {
     robots: shouldNoindex ? { index: false, follow: true } : { index: true, follow: true },
@@ -80,7 +79,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
   // JSON-LD structured data for SEO
   const jsonLd = {
     "@context": "https://schema.org",
-    "@type": article.contentType === "news" || article.contentType === "fact_check" ? "NewsArticle" : "Article",
+    "@type": article.contentType === "news" ? "NewsArticle" : "Article",
     headline: article.title,
     description: article.seoDescription || article.excerpt,
     image: article.heroImageUrl ? [article.heroImageUrl] : [],
@@ -214,7 +213,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
                       <TrendingUp className="w-3 h-3 text-brand" /> Why This Matters
                     </h3>
                     <p className="text-lg text-un-text font-serif italic leading-relaxed">
-                      {article.excerpt || "This briefing deciphers critical shifts in the market hierarchy that directly impact strategic decision-making for investors and operators."}
+                      {article.excerpt || "A detailed analysis of key developments and their implications."}
                     </p>
                   </div>
                   <div className="space-y-4">

@@ -3,15 +3,9 @@ import { Metadata } from "next";
 import { SITE_CONFIG } from "@config";
 
 export const metadata: Metadata = {
-  title: "Privacy Policy — Unstory",
-  description: "Unstory's privacy policy. How we handle your personal information and protect your data.",
+  title: "Privacy Policy",
+  description: "Unstory's privacy policy — how we handle your data and protect your information.",
   alternates: { canonical: `${SITE_CONFIG.url}/privacy` },
-  openGraph: {
-    title: "Privacy Policy",
-    description: "Unstory's privacy policy.",
-    url: `${SITE_CONFIG.url}/privacy`,
-    siteName: SITE_CONFIG.name,
-  },
   robots: { index: true, follow: true },
 };
 

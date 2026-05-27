@@ -5,14 +5,19 @@ import { Metadata } from "next";
 import { SITE_CONFIG } from "@config";
 
 export const metadata: Metadata = {
-  title: "Trending Intelligence — Unstory",
-  description: "The stories and topics currently shaping the global landscape. Trending intelligence on AI, markets, business, and geopolitics.",
+  title: "Trending Intelligence",
+  description: "Stories and topics currently shaping the global landscape for founders and investors.",
   alternates: { canonical: `${SITE_CONFIG.url}/trending` },
   openGraph: {
-    title: "Trending Intelligence",
-    description: "The stories and topics currently shaping the global landscape.",
+    title: `Trending Intelligence | ${SITE_CONFIG.name}`,
+    description: "Stories and topics currently shaping the global landscape for founders and investors.",
     url: `${SITE_CONFIG.url}/trending`,
     siteName: SITE_CONFIG.name,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `Trending Intelligence | ${SITE_CONFIG.name}`,
+    description: "Stories and topics currently shaping the global landscape for founders and investors.",
   },
   robots: { index: true, follow: true },
 };

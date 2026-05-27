@@ -41,6 +41,7 @@ export default async function HomePage() {
     powerArticles,
     lifestyleArticles,
     skillsArticles,
+    trendsArticles,
   ] = await Promise.all([
     queries.articles.getPublishedArticles(10),
     queries.topics.getTrendingTopics(6),
@@ -50,6 +51,7 @@ export default async function HomePage() {
     queries.articles.getArticlesByCategory("power", 4),
     queries.articles.getArticlesByCategory("lifestyle", 4),
     queries.articles.getArticlesByCategory("skills", 4),
+    queries.articles.getArticlesByCategory("trends", 4),
   ]);
 
   const featured = publishedArticles[0];
@@ -121,6 +123,11 @@ export default async function HomePage() {
           title="High-Income Skills"
           slug="skills"
           articles={skillsArticles}
+        />
+        <CategorySection
+          title="Trends & Signals"
+          slug="trends"
+          articles={trendsArticles}
         />
       </div>
 

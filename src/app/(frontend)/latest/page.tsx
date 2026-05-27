@@ -5,14 +5,19 @@ import { Metadata } from "next";
 import { SITE_CONFIG } from "@config";
 
 export const metadata: Metadata = {
-  title: "Latest Intelligence Briefings — Unstory",
-  description: "The latest strategic intelligence briefings covering AI, markets, business, and power shifts for founders and investors.",
+  title: "Latest Briefings",
+  description: "The most recent strategic intelligence briefings from Unstory.",
   alternates: { canonical: `${SITE_CONFIG.url}/latest` },
   openGraph: {
-    title: "Latest Intelligence Briefings",
-    description: "The latest strategic intelligence briefings from Unstory.",
+    title: `Latest Briefings | ${SITE_CONFIG.name}`,
+    description: "The most recent strategic intelligence briefings from Unstory.",
     url: `${SITE_CONFIG.url}/latest`,
     siteName: SITE_CONFIG.name,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `Latest Briefings | ${SITE_CONFIG.name}`,
+    description: "The most recent strategic intelligence briefings from Unstory.",
   },
   robots: { index: true, follow: true },
 };

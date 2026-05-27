@@ -1,9 +1,13 @@
 import { getDb } from "@/lib/db";
-import { articles } from "@/db/schema";
-import { eq, and, desc, sql, notLike, gt } from "drizzle-orm";
+import { articles, categories } from "@/db/schema";
+import { eq, and, desc, sql, notLike } from "drizzle-orm";
 import { SITE_CONFIG } from "@config";
 
-/** Escape special XML characters */
+const YMYL_CATEGORIES = [
+  "investing", "personal-finance", "insurance", "banking", "real-estate",
+  "politics", "geopolitics", "regulation", "longevity", "wealth", "power",
+];
+
 function escapeXml(str: string): string {
   return str
     .replace(/&/g, "&amp;")
@@ -17,7 +21,6 @@ export async function GET() {
   try {
     const { db } = await getDb();
 
-    // News sitemap: only articles from the last 48 hours
     const twoDaysAgo = new Date(Date.now() - 48 * 60 * 60 * 1000);
 
     const recentArticles = await db
@@ -26,7 +29,6 @@ export async function GET() {
         slug: articles.slug,
         publishedAt: articles.publishedAt,
         contentType: articles.contentType,
-        trustScore: articles.trustScore,
         factCheckStatus: articles.factCheckStatus,
       })
       .from(articles)
@@ -36,35 +38,35 @@ export async function GET() {
           sql`${articles.publishedAt} >= ${twoDaysAgo.getTime()}`,
           notLike(articles.slug, "%test%"),
           notLike(articles.title, "%Test%"),
-          gt(articles.trustScore, 69),
         )
       )
       .orderBy(desc(articles.publishedAt));
 
-    // Only include real news articles (not guides, opinion, listicles)
-    const newsTypes = ["news", "analysis", "fact_check"];
-    const newsArticles = recentArticles.filter(
-      (a) => newsTypes.includes(a.contentType || "news") && a.factCheckStatus !== "unverified"
-    );
+    // Only include real news articles, not evergreen guides/opinion
+    const newsArticles = recentArticles.filter((a) => {
+      if (a.contentType === "guide" || a.contentType === "opinion") return false;
+      if (a.factCheckStatus === "unverified") return false;
+      return true;
+    });
 
     const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
         xmlns:news="http://www.google.com/schemas/sitemap-news/0.9">
-  ${newsArticles
-    .map((article) => `
-    <url>
-      <loc>${SITE_CONFIG.url}/article/${escapeXml(article.slug)}</loc>
-      <news:news>
-        <news:publication>
-          <news:name>${escapeXml(SITE_CONFIG.name)}</news:name>
-          <news:language>en</news:language>
-        </news:publication>
-        <news:publication_date>${article.publishedAt?.toISOString()}</news:publication_date>
-        <news:title>${escapeXml(article.title)}</news:title>
-      </news:news>
-    </url>
-  `)
-    .join("")}
+${newsArticles
+  .map(
+    (article) => `  <url>
+    <loc>${SITE_CONFIG.url}/article/${escapeXml(article.slug)}</loc>
+    <news:news>
+      <news:publication>
+        <news:name>${escapeXml(SITE_CONFIG.name)}</news:name>
+        <news:language>en</news:language>
+      </news:publication>
+      <news:publication_date>${article.publishedAt?.toISOString()}</news:publication_date>
+      <news:title>${escapeXml(article.title)}</news:title>
+    </news:news>
+  </url>`
+  )
+  .join("\n")}
 </urlset>`;
 
     return new Response(sitemap, {
@@ -74,13 +76,17 @@ export async function GET() {
       },
     });
   } catch (error) {
-    // Return empty valid news sitemap on error
+    // Return valid empty news sitemap on error
     const emptySitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
         xmlns:news="http://www.google.com/schemas/sitemap-news/0.9">
 </urlset>`;
+
     return new Response(emptySitemap, {
-      headers: { "Content-Type": "application/xml", "Cache-Control": "public, s-maxage=60" },
+      headers: {
+        "Content-Type": "application/xml",
+        "Cache-Control": "public, s-maxage=300, stale-while-revalidate=600",
+      },
     });
   }
 }

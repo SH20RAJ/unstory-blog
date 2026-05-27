@@ -6,14 +6,19 @@ import { Metadata } from "next";
 import { SITE_CONFIG } from "@config";
 
 export const metadata: Metadata = {
-  title: "Intelligence Archive — All Briefings | Unstory",
-  description: "A comprehensive repository of strategic intelligence briefings covering AI, markets, business, power, lifestyle, and skills.",
+  title: "Intelligence Archive",
+  description: "Browse all strategic intelligence briefings on AI, markets, business, and power shifts.",
   alternates: { canonical: `${SITE_CONFIG.url}/blogs` },
   openGraph: {
-    title: "Intelligence Archive — All Briefings",
-    description: "A comprehensive repository of strategic intelligence briefings.",
+    title: `Intelligence Archive | ${SITE_CONFIG.name}`,
+    description: "Browse all strategic intelligence briefings on AI, markets, business, and power shifts.",
     url: `${SITE_CONFIG.url}/blogs`,
     siteName: SITE_CONFIG.name,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `Intelligence Archive | ${SITE_CONFIG.name}`,
+    description: "Browse all strategic intelligence briefings on AI, markets, business, and power shifts.",
   },
   robots: { index: true, follow: true },
 };

@@ -3,14 +3,19 @@ import { Metadata } from "next";
 import { SITE_CONFIG } from "@config";
 
 export const metadata: Metadata = {
-  title: "Advertise — Reach Founders, Investors & Operators | Unstory",
-  description: "Partner with Unstory to reach a high-intent audience of founders, investors, and technologists. Sponsored briefings, newsletter sponsorship, and custom intelligence.",
+  title: "Advertise with Unstory",
+  description: "Reach a high-intent audience of founders, investors, and technologists through Unstory's premium advertising platform.",
   alternates: { canonical: `${SITE_CONFIG.url}/advertise` },
   openGraph: {
-    title: "Advertise with Unstory",
+    title: `Advertise | ${SITE_CONFIG.name}`,
     description: "Reach a high-intent audience of founders, investors, and technologists.",
     url: `${SITE_CONFIG.url}/advertise`,
     siteName: SITE_CONFIG.name,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `Advertise | ${SITE_CONFIG.name}`,
+    description: "Reach a high-intent audience of founders, investors, and technologists.",
   },
   robots: { index: true, follow: true },
 };

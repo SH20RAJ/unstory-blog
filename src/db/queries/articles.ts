@@ -41,7 +41,7 @@ export function createArticlesQueries(db: any) {
         .from(articles)
         .leftJoin(categories, eq(articles.categoryId, categories.id))
         .leftJoin(authors, eq(articles.authorId, authors.id))
-        .where(and(eq(articles.status, "published"), notLike(articles.slug, "%test%"), notLike(articles.title, "%Test%")))
+        .where(and(eq(articles.status, "published"), notLike(articles.slug, "%test%"), notLike(articles.title, "%Test%"), notLike(articles.slug, "%demo%"), notLike(articles.slug, "%sample%")))
         .orderBy(desc(articles.publishedAt))
         .limit(limit)
         .offset(offset);
@@ -82,7 +82,16 @@ export function createArticlesQueries(db: any) {
         .from(articles)
         .leftJoin(categories, eq(articles.categoryId, categories.id))
         .leftJoin(authors, eq(articles.authorId, authors.id))
-        .where(and(eq(articles.slug, slug), eq(articles.status, "published"), notLike(articles.slug, "%test%"), notLike(articles.title, "%Test%")))
+        .where(
+          and(
+            eq(articles.slug, slug),
+            eq(articles.status, "published"),
+            notLike(articles.slug, "%test%"),
+            notLike(articles.title, "%Test%"),
+            notLike(articles.slug, "%demo%"),
+            notLike(articles.slug, "%sample%"),
+          )
+        )
         .limit(1);
 
       if (!results[0]) return null;
@@ -123,7 +132,16 @@ export function createArticlesQueries(db: any) {
         })
         .from(articles)
         .innerJoin(categories, eq(articles.categoryId, categories.id))
-        .where(and(eq(categories.slug, categorySlug), eq(articles.status, "published"), notLike(articles.slug, "%test%"), notLike(articles.title, "%Test%")))
+        .where(
+          and(
+            eq(categories.slug, categorySlug),
+            eq(articles.status, "published"),
+            notLike(articles.slug, "%test%"),
+            notLike(articles.title, "%Test%"),
+            notLike(articles.slug, "%demo%"),
+            notLike(articles.slug, "%sample%"),
+          )
+        )
         .orderBy(desc(articles.publishedAt))
         .limit(limit)
         .offset(offset);
@@ -153,6 +171,8 @@ export function createArticlesQueries(db: any) {
             not(eq(articles.slug, currentSlug)),
             notLike(articles.slug, "%test%"),
             notLike(articles.title, "%Test%"),
+            notLike(articles.slug, "%demo%"),
+            notLike(articles.slug, "%sample%"),
             gt(articles.trustScore, 69),
           )
         )
@@ -170,7 +190,14 @@ export function createArticlesQueries(db: any) {
           heroImageUrl: articles.heroImageUrl,
         })
         .from(articles)
-        .where(and(eq(articles.status, "published"), eq(articles.isTrending, true)))
+        .where(
+          and(
+            eq(articles.status, "published"),
+            eq(articles.isTrending, true),
+            notLike(articles.slug, "%test%"),
+            notLike(articles.title, "%Test%"),
+          )
+        )
         .orderBy(desc(articles.publishedAt))
         .limit(limit);
     },

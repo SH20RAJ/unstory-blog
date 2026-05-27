@@ -1,5 +1,5 @@
 import { getDb } from "./db";
-import { articles, categories } from "@/db/schema";
+import { articles } from "@/db/schema";
 import { eq, and, desc, notLike, not } from "drizzle-orm";
 
 /**

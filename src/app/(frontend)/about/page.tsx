@@ -3,14 +3,19 @@ import { Metadata } from "next";
 import { SITE_CONFIG } from "@config";
 
 export const metadata: Metadata = {
-  title: "About Unstory — Strategic Intelligence Publication",
-  description: "Learn about Unstory's mission, methodology, and editorial standards. Strategic intelligence for founders, investors, and operators tracking AI, markets, and power shifts.",
+  title: "About Unstory",
+  description: "Learn about Unstory's mission to deliver strategic intelligence for founders, investors, and operators.",
   alternates: { canonical: `${SITE_CONFIG.url}/about` },
   openGraph: {
-    title: "About Unstory",
-    description: "Learn about Unstory's mission, methodology, and editorial standards.",
+    title: `About | ${SITE_CONFIG.name}`,
+    description: "Learn about Unstory's mission to deliver strategic intelligence for founders, investors, and operators.",
     url: `${SITE_CONFIG.url}/about`,
     siteName: SITE_CONFIG.name,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `About | ${SITE_CONFIG.name}`,
+    description: "Learn about Unstory's mission to deliver strategic intelligence for founders, investors, and operators.",
   },
   robots: { index: true, follow: true },
 };

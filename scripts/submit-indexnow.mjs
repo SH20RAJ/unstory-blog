@@ -1,52 +1,71 @@
 #!/usr/bin/env node
 
 /**
- * IndexNow Submission Script
- * Submits high-priority URLs to IndexNow for faster indexing.
+ * Unstory.app — IndexNow Submission Script
+ * Submits URLs to IndexNow for faster indexing.
  */
 
 const SITE_URL = process.env.SITE_URL || "https://unstory.app";
-const INDEXNOW_KEY = process.env.INDEXNOW_KEY;
+const INDEXNOW_KEY = process.env.INDEXNOW_KEY || "";
 
-if (!INDEXNOW_KEY) {
-  console.log("⚠️  INDEXNOW_KEY not set. Skipping IndexNow submission.");
-  console.log("Set INDEXNOW_KEY env var to enable.");
-  process.exit(0);
-}
+const PRIORITY_URLS = [
+  "/",
+  "/blogs",
+  "/latest",
+  "/trending",
+  "/about",
+  "/advertise",
+  "/category/ai",
+  "/category/wealth",
+  "/category/business",
+  "/category/power",
+  "/category/lifestyle",
+  "/category/skills",
+  "/category/trends",
+];
 
-async function submitUrls(urls) {
-  const endpoint = "https://api.indexnow.org/IndexNow";
-  const body = {
-    host: "unstory.app",
-    key: INDEXNOW_KEY,
-    keyLocation: `${SITE_URL}/${INDEXNOW_KEY}.txt`,
-    urlList: urls,
-  };
+async function submitIndexNow(urls) {
+  if (!INDEXNOW_KEY) {
+    console.error("Error: INDEXNOW_KEY environment variable is required.");
+    console.log("Get a key from https://www.bing.com/indexnow");
+    process.exit(1);
+  }
+
+  const fullUrls = urls.map((url) => `${SITE_URL}${url}`);
+
+  console.log(`Submitting ${fullUrls.length} URLs to IndexNow...`);
 
   try {
-    const response = await fetch(endpoint, {
+    const response = await fetch(`https://api.indexnow.org/indexnow`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(body),
+      body: JSON.stringify({
+        host: "unstory.app",
+        key: INDEXNOW_KEY,
+        urlList: fullUrls,
+      }),
     });
 
     if (response.ok) {
-      console.log(`✅ Submitted ${urls.length} URLs to IndexNow`);
+      console.log(`✅ Successfully submitted ${fullUrls.length} URLs.`);
     } else {
-      console.log(`❌ IndexNow returned ${response.status}: ${response.statusText}`);
+      console.error(`❌ IndexNow returned status ${response.status}`);
+      const text = await response.text();
+      console.error(text);
     }
   } catch (error) {
-    console.log(`❌ IndexNow submission failed: ${error.message}`);
+    console.error("❌ Failed to submit to IndexNow:", error.message);
   }
 }
 
-// Only submit homepage and key pages (don't spam)
-const priorityUrls = [
-  SITE_URL,
-  `${SITE_URL}/blogs`,
-  `${SITE_URL}/latest`,
-  `${SITE_URL}/trending`,
-  `${SITE_URL}/about`,
-];
+const args = process.argv.slice(2);
 
-submitUrls(priorityUrls);
+if (args.includes("--priority")) {
+  submitIndexNow(PRIORITY_URLS);
+} else if (args.length > 0) {
+  submitIndexNow(args);
+} else {
+  console.log("Usage:");
+  console.log("  node scripts/submit-indexnow.mjs --priority    Submit priority pages");
+  console.log("  node scripts/submit-indexnow.mjs /path1 /path2  Submit specific paths");
+}

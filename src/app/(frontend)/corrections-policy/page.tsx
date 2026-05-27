@@ -3,15 +3,9 @@ import { Metadata } from "next";
 import { SITE_CONFIG } from "@config";
 
 export const metadata: Metadata = {
-  title: "Corrections Policy — Unstory",
-  description: "How Unstory handles errors and ensures historical accuracy in its intelligence briefings.",
+  title: "Corrections Policy",
+  description: "How Unstory handles corrections, updates, and factual accuracy in our intelligence briefings.",
   alternates: { canonical: `${SITE_CONFIG.url}/corrections-policy` },
-  openGraph: {
-    title: "Corrections Policy",
-    description: "How Unstory handles errors and ensures historical accuracy.",
-    url: `${SITE_CONFIG.url}/corrections-policy`,
-    siteName: SITE_CONFIG.name,
-  },
   robots: { index: true, follow: true },
 };
 
