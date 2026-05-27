@@ -7,6 +7,11 @@ export function ThemeToggle() {
   const [mounted, setMounted] = useState(false);
   const [theme, setTheme] = useState<"light" | "dark">("light");
 
+  const applyTheme = (nextTheme: "light" | "dark") => {
+    document.documentElement.classList.toggle("dark", nextTheme === "dark");
+    document.documentElement.classList.toggle("light", nextTheme === "light");
+  };
+
   useEffect(() => {
     setMounted(true);
     const savedTheme = localStorage.getItem("theme") as "light" | "dark" | null;
@@ -14,7 +19,7 @@ export function ThemeToggle() {
     const initialTheme = isDark ? "dark" : "light";
     
     setTheme(initialTheme);
-    document.documentElement.classList.toggle("dark", isDark);
+    applyTheme(initialTheme);
   }, []);
 
   const toggleTheme = (e: React.MouseEvent) => {
@@ -22,7 +27,7 @@ export function ThemeToggle() {
     const newTheme = theme === "light" ? "dark" : "light";
     setTheme(newTheme);
     localStorage.setItem("theme", newTheme);
-    document.documentElement.classList.toggle("dark", newTheme === "dark");
+    applyTheme(newTheme);
   };
 
   if (!mounted) return <div className="w-9 h-9" />;
