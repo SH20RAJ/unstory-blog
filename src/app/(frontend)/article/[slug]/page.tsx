@@ -21,15 +21,19 @@ interface ArticlePageProps {
 export async function generateMetadata({ params }: ArticlePageProps): Promise<Metadata> {
   const { slug } = await params;
   const { queries } = await getDb();
-  const result = await queries.articles.getArticleBySlug(slug);
-  
+  const result = await queries.articles.getPublicArticleBySlug(slug);
+
   if (!result) return {};
 
   const { articles: article } = result;
   const title = article.seoTitle || article.title;
   const description = article.seoDescription || article.excerpt || SITE_CONFIG.description;
+  const isLowTrust = (article.trustScore ?? 100) < 70;
+  const isUnverifiedYMYL = article.factCheckStatus === "unverified";
+  const shouldNoindex = isLowTrust || isUnverifiedYMYL;
 
   return {
+    robots: shouldNoindex ? { index: false, follow: true } : { index: true, follow: true },
     title,
     description,
     alternates: {
@@ -57,13 +61,18 @@ export async function generateMetadata({ params }: ArticlePageProps): Promise<Me
 export default async function ArticlePage({ params }: ArticlePageProps) {
   const { slug } = await params;
   const { queries } = await getDb();
-  const result = await queries.articles.getArticleBySlug(slug);
+  const result = await queries.articles.getPublicArticleBySlug(slug);
 
   if (!result) {
     notFound();
   }
 
   const { articles: article, categories: category, authors: author, sources: articleSourcesList } = result;
+
+  // Block low-trust articles from public view
+  if ((article.trustScore ?? 100) < 50) {
+    notFound();
+  }
   
   // Fetch prev/next articles in parallel
   const { prev, next } = await queries.articles.getPrevNextArticles(article.publishedAt || article.createdAt);
@@ -71,7 +80,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
   // JSON-LD structured data for SEO
   const jsonLd = {
     "@context": "https://schema.org",
-    "@type": "NewsArticle",
+    "@type": article.contentType === "news" ? "NewsArticle" : "Article",
     headline: article.title,
     description: article.seoDescription || article.excerpt,
     image: article.heroImageUrl ? [article.heroImageUrl] : [],
