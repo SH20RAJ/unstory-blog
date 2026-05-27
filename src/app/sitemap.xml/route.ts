@@ -1,9 +1,9 @@
 import { getDb } from "@/lib/db";
 import { articles, categories } from "@/db/schema";
-import { eq, desc, notLike, and, gt, sql } from "drizzle-orm";
+import { eq, and, desc, notLike, gt } from "drizzle-orm";
 import { SITE_CONFIG } from "@config";
 
-/** Escape special XML characters */
+/** Escape XML special characters */
 function escapeXml(str: string): string {
   return str
     .replace(/&/g, "&amp;")
@@ -17,100 +17,100 @@ export async function GET() {
   try {
     const { db } = await getDb();
 
-    // Fetch published articles, excluding test/sample content and low-quality articles
     const allArticles = await db
       .select({
         title: articles.title,
         slug: articles.slug,
         updatedAt: articles.updatedAt,
         publishedAt: articles.publishedAt,
-        body: articles.body,
         trustScore: articles.trustScore,
-        factCheckStatus: articles.factCheckStatus,
-        categoryId: articles.categoryId,
+        body: articles.body,
       })
       .from(articles)
       .where(
         and(
           eq(articles.status, "published"),
           notLike(articles.slug, "%test%"),
-          notLike(articles.slug, "%demo%"),
-          notLike(articles.slug, "%sample%"),
           notLike(articles.title, "%Test%"),
-          notLike(articles.title, "%test%"),
           gt(articles.trustScore, 69),
         )
       )
       .orderBy(desc(articles.publishedAt));
+
+    // Filter out articles with body under ~900 words (roughly 4500 chars)
+    const qualityArticles = allArticles.filter(
+      (a) => a.body && a.body.length >= 4500
+    );
 
     const allCategories = await db
       .select({ slug: categories.slug })
       .from(categories)
       .where(eq(categories.isActive, true));
 
-    // YMYL category slugs that require fact-checking
-    const YMYL_CATEGORIES = [
-      "investing", "personal-finance", "insurance", "banking",
-      "real-estate", "politics", "geopolitics", "regulation", "longevity",
-      "wealth", "power",
-    ];
-
-    // Filter articles: exclude thin content and unverified YMYL
-    const filteredArticles = allArticles.filter((a) => {
-      const wordCount = (a.body || "").split(/\s+/).filter(Boolean).length;
-      if (wordCount < 150) return false;
-      if (YMYL_CATEGORIES.includes(a.categoryId || "") && a.factCheckStatus === "unverified") return false;
-      return true;
-    });
-
     const staticPages = [
-      { path: "", changefreq: "hourly", priority: "1.0" },
-      { path: "/blogs", changefreq: "daily", priority: "0.8" },
-      { path: "/latest", changefreq: "daily", priority: "0.8" },
-      { path: "/trending", changefreq: "daily", priority: "0.7" },
-      { path: "/about", changefreq: "monthly", priority: "0.5" },
-      { path: "/contact", changefreq: "monthly", priority: "0.3" },
-      { path: "/advertise", changefreq: "monthly", priority: "0.4" },
-      { path: "/privacy", changefreq: "yearly", priority: "0.2" },
-      { path: "/terms", changefreq: "yearly", priority: "0.2" },
-      { path: "/editorial-policy", changefreq: "monthly", priority: "0.3" },
-      { path: "/corrections-policy", changefreq: "monthly", priority: "0.3" },
-      { path: "/fact-checking-policy", changefreq: "monthly", priority: "0.3" },
-      { path: "/methodology", changefreq: "monthly", priority: "0.3" },
+      "",
+      "/blogs",
+      "/latest",
+      "/trending",
+      "/about",
+      "/contact",
+      "/advertise",
+      "/privacy",
+      "/terms",
+      "/editorial-policy",
+      "/corrections-policy",
+      "/fact-checking-policy",
+      "/methodology",
     ];
 
-    const urls = [
-      ...staticPages.map((p) => `
+    // Deduplicate
+    const seen = new Set<string>();
+    const urls: string[] = [];
+
+    for (const path of staticPages) {
+      const url = `${SITE_CONFIG.url}${path}`;
+      if (!seen.has(url)) {
+        seen.add(url);
+        urls.push(`
   <url>
-    <loc>${SITE_CONFIG.url}${p.path}</loc>
-    <changefreq>${p.changefreq}</changefreq>
-    <priority>${p.priority}</priority>
-  </url>`),
-      ...allCategories.map((cat) => `
+    <loc>${url}</loc>
+    <changefreq>${path === "" ? "hourly" : "weekly"}</changefreq>
+    <priority>${path === "" ? "1.0" : "0.5"}</priority>
+  </url>`);
+      }
+    }
+
+    for (const cat of allCategories) {
+      const url = `${SITE_CONFIG.url}/category/${cat.slug}`;
+      if (!seen.has(url)) {
+        seen.add(url);
+        urls.push(`
   <url>
-    <loc>${SITE_CONFIG.url}/category/${escapeXml(cat.slug)}</loc>
+    <loc>${escapeXml(url)}</loc>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
-  </url>`),
-      ...filteredArticles.map((a) => {
-        const lastmod = (a.updatedAt || a.publishedAt || new Date());
-        const lastmodStr = lastmod instanceof Date ? lastmod.toISOString() : new Date(lastmod).toISOString();
-        return `
+  </url>`);
+      }
+    }
+
+    for (const a of qualityArticles) {
+      const url = `${SITE_CONFIG.url}/article/${a.slug}`;
+      if (!seen.has(url)) {
+        seen.add(url);
+        const lastmod = (a.updatedAt || a.publishedAt || new Date()).toISOString?.() || new Date().toISOString();
+        urls.push(`
   <url>
-    <loc>${SITE_CONFIG.url}/article/${escapeXml(a.slug)}</loc>
-    <lastmod>${lastmodStr}</lastmod>
+    <loc>${escapeXml(url)}</loc>
+    <lastmod>${lastmod}</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
-  </url>`;
-      }),
-    ];
-
-    // Deduplicate URLs
-    const uniqueUrls = [...new Set(urls)];
+  </url>`);
+      }
+    }
 
     const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-${uniqueUrls.join("")}
+${urls.join("")}
 </urlset>`;
 
     return new Response(sitemap, {
@@ -120,11 +120,16 @@ ${uniqueUrls.join("")}
       },
     });
   } catch (error) {
-    // Always return valid XML, never 500
-    const emptySitemap = `<?xml version="1.0" encoding="UTF-8"?>
+    // Return minimal valid sitemap on error
+    const fallback = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>${SITE_CONFIG.url}</loc>
+    <changefreq>hourly</changefreq>
+    <priority>1.0</priority>
+  </url>
 </urlset>`;
-    return new Response(emptySitemap, {
+    return new Response(fallback, {
       headers: { "Content-Type": "application/xml", "Cache-Control": "public, s-maxage=60" },
     });
   }
