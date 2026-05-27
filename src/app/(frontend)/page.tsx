@@ -4,6 +4,26 @@ import { CategorySection } from "@/components/category/CategorySection";
 import { TrendingList } from "@/components/category/TrendingList";
 import { Badge } from "@/components/ui/Badge";
 import Link from "next/link";
+import { Metadata } from "next";
+import { SITE_CONFIG } from "@config";
+
+export const metadata: Metadata = {
+  title: `${SITE_CONFIG.name} — ${SITE_CONFIG.tagline}`,
+  description: SITE_CONFIG.description,
+  alternates: { canonical: SITE_CONFIG.url },
+  openGraph: {
+    title: SITE_CONFIG.name,
+    description: SITE_CONFIG.description,
+    url: SITE_CONFIG.url,
+    siteName: SITE_CONFIG.name,
+    locale: SITE_CONFIG.locale,
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    site: "@unstoryapp",
+  },
+};
 
 export const dynamic = "force-dynamic";
 
