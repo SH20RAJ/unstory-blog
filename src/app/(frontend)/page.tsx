@@ -23,6 +23,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     site: "@unstoryapp",
   },
+  robots: { index: true, follow: true },
 };
 
 export const dynamic = "force-dynamic";

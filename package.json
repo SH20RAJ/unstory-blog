@@ -25,7 +25,8 @@
     "test:int": "cross-env NODE_OPTIONS=--no-deprecation vitest run --config ./vitest.config.mts",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "wrangler d1 migrations apply D1 --local",
-    "db:seed": "tsx src/scripts/seed.ts"
+    "db:seed": "tsx src/scripts/seed.ts",
+    "seo:audit": "node scripts/seo-audit.mjs"
   },
   "dependencies": {
     "@opennextjs/cloudflare": "^1.19.11",
