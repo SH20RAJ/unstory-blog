@@ -1,73 +1,44 @@
-# Google Search Console Checklist for Unstory.app
+# Google Search Console Setup Checklist for Unstory.app
 
 ## Initial Setup
-
-1. **Add Property** — Go to [Google Search Console](https://search.google.com/search-console) and add `unstory.app` as a property
-2. **Verify Ownership** — Use one of these methods:
-   - **Meta tag** — Add `NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION` env variable with the verification code
-   - **HTML file** — Upload the verification HTML file to `public/`
-   - **DNS** — Add TXT record to DNS (recommended for domain-level verification)
-3. **Set Preferred Domain** — Ensure `https://unstory.app` (not www) is the canonical
+1. [ ] Add `unstory.app` property in Google Search Console
+2. [ ] Verify ownership using HTML meta tag (set `NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION` env var)
+3. [ ] Verify ownership is confirmed
 
 ## Sitemap Submission
-
-4. **Submit Sitemap** — In GSC, go to Sitemaps and submit:
-   - `https://unstory.app/sitemap.xml`
-   - `https://unstory.app/news-sitemap.xml`
-5. **Verify Sitemap** — Check that both sitemaps return valid XML with no errors
+4. [ ] Submit `https://unstory.app/sitemap.xml`
+5. [ ] Submit `https://unstory.app/news-sitemap.xml` (for Google News)
+6. [ ] Verify sitemaps are processed without errors
 
 ## URL Inspection
+7. [ ] Inspect homepage: `https://unstory.app/`
+8. [ ] Request indexing for homepage
+9. [ ] Inspect 5 best article URLs
+10. [ ] Request indexing for each
 
-6. **Inspect Homepage** — Use URL Inspection tool on `https://unstory.app`
-7. **Request Indexing** — If not indexed, click "Request Indexing"
-8. **Inspect Top Articles** — Check 5-10 best article URLs:
-   - Each should show "URL is on Google"
-   - Check for canonical issues
-   - Check for mobile usability issues
+## Coverage Report (Pages)
+11. [ ] Check "Crawled - currently not indexed"
+12. [ ] Check "Discovered - currently not indexed"
+13. [ ] Check "Duplicate without user-selected canonical"
+14. [ ] Check "Soft 404"
+15. [ ] Fix any issues found, validate fixes
 
-## Coverage Report
+## Manual Actions
+16. [ ] Check Manual Actions report
+17. [ ] If any actions exist, fix and submit reconsideration request
 
-9. **Check Pages Report** — Look for these issues:
-   - **Crawled — currently not indexed**: Pages Google found but chose not to index
-   - **Discovered — currently not indexed**: Pages in sitemap but not yet crawled
-   - **Duplicate without user-selected canonical**: Canonical conflicts
-   - **Soft 404**: Pages returning 200 but with thin/error content
-   - **Excluded by noindex tag**: Pages with noindex meta
-10. **Fix Issues** — For each category:
-    - Thin content → Add more content or noindex
-    - Duplicate canonicals → Fix canonical tags
-    - Soft 404s → Ensure pages have real content
+## Enhancements
+18. [ ] Check Core Web Vitals report
+19. [ ] Check Mobile Usability report
+20. [ ] Verify structured data (Article, Organization, WebSite schemas)
 
-## Rich Results
+## Ongoing Monitoring
+- [ ] Weekly: Review impressions/clicks trends
+- [ ] Weekly: Check for new coverage issues
+- [ ] Monthly: Review top queries and pages
+- [ ] Monthly: Submit new article URLs for indexing
 
-11. **Check Structured Data** — Verify JSON-LD on:
-    - Articles have `Article` or `NewsArticle` schema
-    - Breadcrumbs are present
-    - Organization schema on homepage
-12. **Test Rich Results** — Use [Rich Results Test](https://search.google.com/test/rich-results) on article URLs
-
-## Performance Monitoring
-
-13. **Track Weekly** — Monitor:
-    - Total impressions
-    - Total clicks
-    - Average CTR
-    - Average position
-14. **Identify Opportunities** — Look for:
-    - High impressions, low CTR → Improve titles/descriptions
-    - High position, low clicks → Improve snippets
-    - Pages dropping in position → Check for content freshness
-
-## AdSense Verification
-
-15. **ads.txt** — Verify `https://unstory.app/ads.txt` returns correct content
-16. **Ad Review** — Check AdSense dashboard for policy violations
-17. **Page Experience** — Ensure Core Web Vitals pass
-
-## Ongoing Maintenance
-
-- [ ] Submit new articles to IndexNow after publishing
-- [ ] Check GSC weekly for crawl errors
-- [ ] Update sitemap when adding new page types
-- [ ] Monitor for manual actions
-- [ ] Review and fix coverage issues monthly
+## AdSense Integration
+21. [ ] Verify ads.txt is accessible at `https://unstory.app/ads.txt`
+22. [ ] Confirm AdSense account status in Google AdSense dashboard
+23. [ ] Check policy center for any violations
