@@ -1,4 +1,4 @@
-import { eq, desc, and, or, like, not, count, sql, asc, notLike } from "drizzle-orm";
+import { eq, desc, and, or, like, not, count, sql, asc, notLike, gt } from "drizzle-orm";
 import { articles, authors, categories, mediaAssets, articleSources, sources } from "../schema";
 
 export function createArticlesQueries(db: any) {
@@ -41,7 +41,7 @@ export function createArticlesQueries(db: any) {
         .from(articles)
         .leftJoin(categories, eq(articles.categoryId, categories.id))
         .leftJoin(authors, eq(articles.authorId, authors.id))
-        .where(eq(articles.status, "published"))
+        .where(and(eq(articles.status, "published"), notLike(articles.slug, "%test%"), notLike(articles.title, "%Test%")))
         .orderBy(desc(articles.publishedAt))
         .limit(limit)
         .offset(offset);
@@ -76,6 +76,35 @@ export function createArticlesQueries(db: any) {
       };
     },
 
+    async getPublicArticleBySlug(slug: string) {
+      const results = await db
+        .select()
+        .from(articles)
+        .leftJoin(categories, eq(articles.categoryId, categories.id))
+        .leftJoin(authors, eq(articles.authorId, authors.id))
+        .where(and(eq(articles.slug, slug), eq(articles.status, "published"), notLike(articles.slug, "%test%"), notLike(articles.title, "%Test%")))
+        .limit(1);
+
+      if (!results[0]) return null;
+
+      // Fetch sources for this article
+      const articleSourcesList = await db
+        .select({
+          id: sources.id,
+          name: sources.name,
+          url: sources.url,
+          sourceType: sources.sourceType,
+        })
+        .from(articleSources)
+        .innerJoin(sources, eq(articleSources.sourceId, sources.id))
+        .where(eq(articleSources.articleId, results[0].articles.id));
+
+      return {
+        ...results[0],
+        sources: articleSourcesList
+      };
+    },
+
     async getArticlesByCategory(categorySlug: string, limit = 10, offset = 0) {
       return db
         .select({
@@ -94,7 +123,7 @@ export function createArticlesQueries(db: any) {
         })
         .from(articles)
         .innerJoin(categories, eq(articles.categoryId, categories.id))
-        .where(and(eq(categories.slug, categorySlug), eq(articles.status, "published")))
+        .where(and(eq(categories.slug, categorySlug), eq(articles.status, "published"), notLike(articles.slug, "%test%"), notLike(articles.title, "%Test%")))
         .orderBy(desc(articles.publishedAt))
         .limit(limit)
         .offset(offset);
@@ -121,7 +150,10 @@ export function createArticlesQueries(db: any) {
           and(
             eq(articles.categoryId, categoryId),
             eq(articles.status, "published"),
-            not(eq(articles.slug, currentSlug))
+            not(eq(articles.slug, currentSlug)),
+            notLike(articles.slug, "%test%"),
+            notLike(articles.title, "%Test%"),
+            gt(articles.trustScore, 69),
           )
         )
         .orderBy(desc(articles.publishedAt))
