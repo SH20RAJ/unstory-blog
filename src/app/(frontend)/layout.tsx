@@ -1,18 +1,17 @@
 import type { Metadata } from "next";
-import { Inter, Instrument_Serif } from "next/font/google";
+import { DM_Sans, Lora } from "next/font/google";
 import "./styles.css";
 import { SITE_CONFIG } from "@/config";
 import { SiteHeader } from "@/components/layout/SiteHeader";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 
-const inter = Inter({
+const dmSans = DM_Sans({
   subsets: ["latin"],
   variable: "--font-sans",
 });
 
-const instrumentSerif = Instrument_Serif({
+const lora = Lora({
   subsets: ["latin"],
-  weight: "400",
   variable: "--font-serif",
 });
 
@@ -62,7 +61,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${inter.variable} ${instrumentSerif.variable}`}>
+    <html lang="en" className={`${dmSans.variable} ${lora.variable}`}>
       <head>
         <meta name="google-adsense-account" content="ca-pub-1828915420581549" />
         <script

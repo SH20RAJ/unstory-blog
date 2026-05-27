@@ -2,8 +2,8 @@
 @plugin "@tailwindcss/typography";
 
 @theme {
-  --font-serif: "Instrument Serif", serif;
-  --font-sans: "Inter", sans-serif;
+  --font-serif: "Lora", serif;
+  --font-sans: "DM Sans", sans-serif;
 
   --color-brand: #E11D48;
   
