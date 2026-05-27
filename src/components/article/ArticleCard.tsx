@@ -1,10 +1,7 @@
 import Link from "next/link";
-import Image from "next/image";
-import { Badge } from "@/components/ui/Badge";
 import { ArticleMeta } from "./ArticleMeta";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
-
 import { ImagePlaceholder } from "@/components/ui/ImagePlaceholder";
 
 function cn(...inputs: ClassValue[]) {
@@ -22,60 +19,71 @@ interface ArticleCardProps {
       slug: string;
     } | null;
     heroImageUrl?: string | null;
+    author?: {
+      name: string;
+    } | null;
   };
   variant?: "default" | "minimal" | "compact";
   className?: string;
 }
 
 export function ArticleCard({ article, variant = "default", className }: ArticleCardProps) {
-  const { title, slug, excerpt, publishedAt, category, heroImageUrl } = article;
+  const { title, slug, excerpt, publishedAt, category, heroImageUrl, author } = article;
+  const showImage = variant !== "minimal";
 
   return (
-    <article className={cn("group flex flex-col space-y-4", className)}>
-      {/* Hero Image */}
-      {variant !== "minimal" && (
-        <Link href={`/article/${slug}`} className="block relative aspect-video overflow-hidden rounded-lg premium-border">
+    <article className={cn(
+      "group border-t border-un-border pt-5",
+      variant === "compact" ? "space-y-3" : "space-y-4",
+      className
+    )}>
+      {showImage && (
+        <Link href={`/article/${slug}`} className="relative block aspect-[4/3] overflow-hidden rounded-[6px] bg-un-surface">
           {heroImageUrl ? (
             <img
               src={heroImageUrl}
               alt={title}
-              className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-105"
+              className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
             />
           ) : (
             <ImagePlaceholder />
           )}
-          {category && (
-            <div className="absolute top-4 left-4">
-              <Badge variant="premium">{category.name}</Badge>
-            </div>
-          )}
         </Link>
       )}
 
-      {/* Content */}
-      <div className="flex flex-col space-y-3">
-        {variant === "minimal" && category && (
-          <span className="text-[10px] uppercase tracking-widest text-brand font-semibold">
+      <div className="space-y-3">
+        {category && (
+          <Link
+            href={`/category/${category.slug}`}
+            className="section-kicker inline-flex hover:text-un-accent"
+          >
             {category.name}
-          </span>
+          </Link>
         )}
         
         <Link href={`/article/${slug}`} className="block">
           <h3 className={cn(
-            "font-serif text-un-text group-hover:text-brand transition-colors leading-tight",
-            variant === "compact" ? "text-lg" : "text-2xl"
+            "headline-balance font-serif font-bold leading-[1.05] text-un-text transition-colors group-hover:text-brand",
+            variant === "compact" ? "text-xl" : "text-2xl lg:text-[1.72rem]"
           )}>
             {title}
           </h3>
         </Link>
 
-        {variant === "default" && excerpt && (
-          <p className="text-un-muted text-sm line-clamp-2 leading-relaxed">
+        {excerpt && variant !== "compact" && (
+          <p className="line-clamp-3 text-sm leading-6 text-un-muted">
             {excerpt}
           </p>
         )}
 
-        <ArticleMeta date={publishedAt} className="pt-2" />
+        <div className="flex flex-wrap items-center gap-x-3 gap-y-2 pt-1">
+          {author?.name && (
+            <span className="text-[10px] font-black uppercase tracking-[0.18em] text-un-text/70">
+              {author.name}
+            </span>
+          )}
+          <ArticleMeta date={publishedAt} />
+        </div>
       </div>
     </article>
   );

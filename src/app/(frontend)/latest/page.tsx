@@ -1,6 +1,7 @@
 import { getDb } from "@/lib/db";
 import { ArticleCard } from "@/components/article/ArticleCard";
 import { Pagination } from "@/components/ui/Pagination";
+import { Badge } from "@/components/ui/Badge";
 import { Metadata } from "next";
 import { SITE_CONFIG } from "@config";
 
@@ -38,23 +39,24 @@ export default async function LatestPage({ searchParams }: LatestPageProps) {
   const articles = await queries.articles.getPublishedArticles(limit, offset);
 
   return (
-    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-20">
-      <header className="mb-16 lg:mb-24 text-center">
-        <span className="text-[10px] uppercase tracking-[0.4em] text-brand font-bold">
-          Intelligence Archive
-        </span>
-        <h1 className="text-5xl lg:text-7xl font-serif font-bold text-un-text tracking-tight mt-4">
+    <div className="editorial-container py-12 lg:py-20">
+      <header className="magazine-rule mb-12 py-8 text-center lg:mb-16">
+        <Badge variant="premium">Intelligence Archive</Badge>
+        <h1 className="mt-6 font-serif text-5xl font-black leading-none text-un-text lg:text-7xl">
           Latest Briefings
         </h1>
+        <p className="mx-auto mt-5 max-w-2xl font-serif text-xl leading-8 text-un-accent">
+          Fresh reporting and analysis from the Unstory desk.
+        </p>
       </header>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 lg:gap-10">
+      <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {articles.map((article: any) => (
           <ArticleCard key={article.slug} article={article} />
         ))}
       </div>
 
-      <div className="mt-20 flex justify-center">
+      <div className="mt-16 flex justify-center">
         <Pagination 
           currentPage={page} 
           totalPages={5} // Placeholder; calculate from total count in real app

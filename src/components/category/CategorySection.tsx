@@ -10,31 +10,36 @@ interface CategorySectionProps {
 
 export function CategorySection({ title, slug, articles }: CategorySectionProps) {
   if (articles.length === 0) return null;
+  const [lead, ...rest] = articles;
 
   return (
-    <section className="py-12 border-t border-un-border first:border-t-0">
-      <div className="flex items-end justify-between mb-10">
-        <div className="space-y-1">
-          <span className="text-[10px] uppercase tracking-[0.3em] text-brand font-bold">Category</span>
-          <h2 className="text-3xl lg:text-4xl font-serif font-bold text-un-text tracking-tight">{title}</h2>
+    <section className="border-t border-un-border py-12 first:border-t-0 lg:py-16">
+      <div className="mb-8 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
+        <div className="space-y-2">
+          <span className="section-kicker">Section</span>
+          <h2 className="font-serif text-3xl font-black leading-none text-un-text lg:text-5xl">{title}</h2>
         </div>
         <Link 
           href={`/category/${slug}`} 
-          className="flex items-center space-x-1 text-sm font-semibold text-un-muted hover:text-brand transition-colors group"
+          className="group inline-flex items-center gap-1 text-[10px] font-black uppercase tracking-[0.22em] text-un-muted transition-colors hover:text-brand"
         >
-          <span>View All Intelligence</span>
-          <ChevronRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+          <span>All Stories</span>
+          <ChevronRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
         </Link>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-10">
-        {articles.map((article) => (
-          <ArticleCard 
-            key={article.slug} 
-            article={article} 
-            variant="compact" 
-          />
-        ))}
+      <div className="grid grid-cols-1 gap-8 lg:grid-cols-12 lg:gap-10">
+        <ArticleCard article={lead} className="lg:col-span-5" />
+
+        <div className="grid grid-cols-1 gap-7 md:grid-cols-3 lg:col-span-7">
+          {rest.slice(0, 3).map((article) => (
+            <ArticleCard
+              key={article.slug}
+              article={article}
+              variant="compact"
+            />
+          ))}
+        </div>
       </div>
     </section>
   );

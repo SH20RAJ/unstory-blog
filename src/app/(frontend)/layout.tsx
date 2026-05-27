@@ -1,22 +1,23 @@
 import type { Metadata } from "next";
-import { DM_Sans, Lora } from "next/font/google";
+import { Inter, Newsreader } from "next/font/google";
 import "./styles.css";
 import { SITE_CONFIG } from "@/config";
 import { SiteHeader } from "@/components/layout/SiteHeader";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 
-const dmSans = DM_Sans({
+const inter = Inter({
   subsets: ["latin"],
   variable: "--font-sans",
 });
 
-const lora = Lora({
+const newsreader = Newsreader({
   subsets: ["latin"],
   variable: "--font-serif",
+  axes: ["opsz"],
 });
 
 export const viewport = {
-  themeColor: "#E11D48",
+  themeColor: "#101010",
   width: "device-width",
   initialScale: 1,
 };
@@ -61,7 +62,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${dmSans.variable} ${lora.variable}`}>
+    <html lang="en" className={`${inter.variable} ${newsreader.variable}`}>
       <head>
         <meta name="google-adsense-account" content="ca-pub-1828915420581549" />
         {process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION && (

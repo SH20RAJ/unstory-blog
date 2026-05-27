@@ -6,6 +6,7 @@ import { TopicPill } from "@/components/category/TopicPill";
 import { Metadata } from "next";
 import { SITE_CONFIG } from "@config";
 import { Pagination } from "@/components/ui/Pagination";
+import { Badge } from "@/components/ui/Badge";
 
 export const dynamic = "force-dynamic";
 
@@ -52,24 +53,20 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
   const totalPages = Math.ceil(totalCount / limit);
 
   return (
-    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-20">
-      {/* Category Header */}
-      <header className="mb-16 lg:mb-24 max-w-4xl">
-        <div className="space-y-6">
-          <span className="text-[10px] uppercase tracking-[0.4em] text-brand font-bold">
-            Intelligence Category
-          </span>
-          <h1 className="text-5xl lg:text-7xl font-serif font-bold text-un-text tracking-tight">
+    <div className="editorial-container py-12 lg:py-20">
+      <header className="magazine-rule mb-12 max-w-5xl py-8 lg:mb-16">
+        <Badge variant="premium">Intelligence Category</Badge>
+        <div className="mt-6 space-y-5">
+          <h1 className="font-serif text-5xl font-black leading-none text-un-text lg:text-7xl">
             {categoryResult.name}
           </h1>
-          <p className="text-xl lg:text-2xl text-un-muted font-serif leading-relaxed italic">
+          <p className="max-w-3xl font-serif text-xl leading-8 text-un-accent lg:text-2xl">
             {categoryResult.description}
           </p>
         </div>
 
-        {/* Subcategories / Topics */}
         {categoryResult.children.length > 0 && (
-          <div className="flex flex-wrap gap-3 pt-12">
+          <div className="flex flex-wrap gap-3 pt-10">
             {categoryResult.children.map((child: any) => (
               <TopicPill 
                 key={child.slug} 
@@ -81,10 +78,9 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
         )}
       </header>
 
-      {/* Main Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
+      <div className="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:gap-16">
         <div className="lg:col-span-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-16">
+          <div className="grid grid-cols-1 gap-x-8 gap-y-10 md:grid-cols-2">
             {articlesResult.map((article: any) => (
               <ArticleCard 
                 key={article.slug} 
@@ -94,8 +90,8 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
           </div>
           
           {articlesResult.length === 0 && (
-            <div className="py-20 text-center border-2 border-dashed border-un-border rounded-2xl">
-              <p className="text-un-muted font-serif italic text-lg">
+            <div className="rounded-[6px] border border-dashed border-un-border py-20 text-center">
+              <p className="font-serif text-lg italic text-un-muted">
                 Intelligence briefings are being prepared for this category.
               </p>
             </div>

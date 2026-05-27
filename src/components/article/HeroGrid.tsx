@@ -8,17 +8,25 @@ interface HeroGridProps {
 
 export function HeroGrid({ featured, others }: HeroGridProps) {
   return (
-    <div className="space-y-12">
-      {/* Primary Featured Story */}
-      {featured && <FeaturedArticle article={featured} />}
+    <div className="grid grid-cols-1 gap-10 lg:grid-cols-12">
+      <div className="lg:col-span-8">
+        {featured && <FeaturedArticle article={featured} />}
+      </div>
 
-      {/* Secondary Stories Grid */}
       {others.length > 0 && (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-12">
-          {others.map((article) => (
-            <ArticleCard key={article.slug} article={article} />
-          ))}
-        </div>
+        <aside className="border-t border-un-border pt-6 lg:col-span-4 lg:border-l lg:border-t-0 lg:pl-8 lg:pt-0">
+          <div className="mb-5 flex items-center justify-between border-b border-un-border pb-3">
+            <h2 className="section-kicker">Editor&apos;s Picks</h2>
+            <span className="text-[10px] font-black uppercase tracking-[0.22em] text-un-muted">
+              Latest
+            </span>
+          </div>
+          <div className="space-y-6">
+            {others.map((article) => (
+              <ArticleCard key={article.slug} article={article} variant="minimal" />
+            ))}
+          </div>
+        </aside>
       )}
     </div>
   );

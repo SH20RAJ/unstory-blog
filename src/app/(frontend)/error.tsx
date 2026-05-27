@@ -16,34 +16,32 @@ export default function Error({
   }, [error]);
 
   return (
-    <div className="min-h-[70vh] flex flex-col items-center justify-center p-8 text-center max-w-2xl mx-auto space-y-8">
+    <div className="editorial-container flex min-h-[70vh] flex-col items-center justify-center p-8 text-center">
       <div className="space-y-4">
-        <Badge variant="premium" className="bg-brand/10 text-brand border-brand/20">
-          Intelligence Interrupted
-        </Badge>
-        <h1 className="text-4xl lg:text-6xl font-serif font-bold text-un-text tracking-tight">
+        <Badge variant="premium">Intelligence Interrupted</Badge>
+        <h1 className="font-serif text-5xl font-black leading-none text-un-text lg:text-7xl">
           A server-side anomaly has occurred.
         </h1>
-        <p className="text-un-muted text-lg font-serif italic">
+        <p className="mx-auto max-w-2xl font-serif text-xl leading-8 text-un-accent">
           Our systems encountered an unexpected exception while decrypting this briefing.
         </p>
         {error.digest && (
-          <p className="text-[10px] uppercase tracking-widest text-un-muted/50 font-mono">
+          <p className="font-mono text-[10px] uppercase tracking-widest text-un-muted/50">
             Exception Digest: {error.digest}
           </p>
         )}
       </div>
 
-      <div className="flex flex-col sm:flex-row gap-4">
+      <div className="mt-8 flex flex-col gap-3 sm:flex-row">
         <button
           onClick={() => reset()}
-          className="bg-un-text text-un-bg px-8 py-3 font-bold uppercase tracking-widest text-xs hover:bg-brand transition-all"
+          className="rounded-[4px] bg-un-text px-8 py-3.5 text-xs font-black uppercase tracking-[0.22em] text-un-bg transition-colors hover:bg-brand"
         >
           Retry Briefing
         </button>
         <Link
           href="/"
-          className="border border-un-border text-un-text px-8 py-3 font-bold uppercase tracking-widest text-xs hover:bg-un-surface transition-all"
+          className="rounded-[4px] border border-un-border px-8 py-3.5 text-xs font-black uppercase tracking-[0.22em] text-un-text transition-colors hover:bg-un-surface"
         >
           Return to Dashboard
         </Link>

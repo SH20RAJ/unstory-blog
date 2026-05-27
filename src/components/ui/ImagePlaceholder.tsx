@@ -13,25 +13,23 @@ interface ImagePlaceholderProps {
 export function ImagePlaceholder({ text = "UNSTORY", className }: ImagePlaceholderProps) {
   return (
     <div className={cn(
-      "w-full h-full relative overflow-hidden flex items-center justify-center",
-      "bg-gradient-to-br from-premium-gray via-white to-premium-gray",
+      "w-full h-full relative overflow-hidden flex items-center justify-center bg-un-surface",
       className
     )}>
-      {/* Animated background patterns */}
-      <div className="absolute inset-0 opacity-[0.03] pointer-events-none">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--color-brand)_1px,_transparent_1px)] [background-size:24px_24px]" />
+      <div className="absolute inset-0 opacity-[0.08] pointer-events-none">
+        <div className="absolute inset-0 bg-[linear-gradient(90deg,var(--un-text)_1px,transparent_1px),linear-gradient(0deg,var(--un-text)_1px,transparent_1px)] [background-size:28px_28px]" />
       </div>
       
-      {/* Centered Logo text */}
-      <div className="relative z-10 flex flex-col items-center">
-        <span className="text-un-text/5 font-serif text-[12vw] lg:text-[8vw] font-bold tracking-tighter leading-none select-none">
+      <div className="absolute inset-x-6 top-6 border-t border-un-border" />
+      <div className="absolute inset-x-6 bottom-6 border-t border-un-border" />
+      <div className="relative z-10 flex flex-col items-center px-6 text-center">
+        <span className="text-un-text/15 font-serif text-[11vw] lg:text-[6vw] font-black leading-none select-none">
           {text}
         </span>
-        <div className="w-12 h-1 bg-brand/20 mt-4 animate-pulse" />
+        <span className="mt-4 text-[10px] font-black uppercase tracking-[0.28em] text-brand">
+          Daily File
+        </span>
       </div>
-      
-      {/* Glossy overlay */}
-      <div className="absolute inset-0 bg-gradient-to-tr from-white/0 via-white/5 to-white/0 pointer-events-none" />
     </div>
   );
 }

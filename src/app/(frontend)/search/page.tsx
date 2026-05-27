@@ -30,13 +30,13 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
   const articles = query ? await queries.articles.searchArticles(query, 50) : [];
 
   return (
-    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-24">
-      <header className="mb-16 space-y-6">
+    <div className="editorial-container py-12 lg:py-20">
+      <header className="magazine-rule mb-12 py-8 lg:mb-16">
         <Badge variant="premium">Intelligence Discovery</Badge>
-        <h1 className="text-4xl lg:text-6xl font-serif font-bold text-un-text tracking-tight">
+        <h1 className="mt-6 font-serif text-5xl font-black leading-none text-un-text lg:text-7xl">
           {query ? `Search results for "${query}"` : "Search Intelligence"}
         </h1>
-        <p className="text-un-muted text-lg font-serif italic max-w-2xl">
+        <p className="mt-5 max-w-2xl font-serif text-xl leading-8 text-un-accent">
           {articles.length > 0 
             ? `Found ${articles.length} briefings matching your inquiry.`
             : query 
@@ -45,7 +45,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
         </p>
       </header>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-12">
+      <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
         {articles.map((article: any) => (
           <ArticleCard key={article.id} article={article} />
         ))}

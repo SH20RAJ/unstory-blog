@@ -15,7 +15,7 @@ interface SearchInputProps {
   className?: string;
 }
 
-export function SearchInput({ placeholder = "Search intelligence...", className }: SearchInputProps) {
+export function SearchInput({ placeholder = "Search stories, markets, AI...", className }: SearchInputProps) {
   const [query, setQuery] = useState("");
   const router = useRouter();
 
@@ -28,13 +28,13 @@ export function SearchInput({ placeholder = "Search intelligence...", className 
 
   return (
     <form onSubmit={handleSearch} className={cn("relative group", className)}>
-      <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-un-muted group-focus-within:text-brand transition-colors" />
+      <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-un-muted group-focus-within:text-brand transition-colors" />
       <input
         type="text"
         value={query}
         onChange={(e) => setQuery(e.target.value)}
         placeholder={placeholder}
-        className="w-full pl-12 pr-4 py-3 bg-un-surface border border-un-border rounded-full text-sm text-un-text placeholder:text-un-muted focus:outline-none focus:border-brand/50 transition-all"
+        className="w-full pl-10 pr-4 py-2.5 bg-un-paper border border-un-border rounded-[4px] text-sm text-un-text placeholder:text-un-muted focus:outline-none focus:border-brand focus:bg-un-bg transition-all"
       />
     </form>
   );

@@ -6,21 +6,20 @@ interface StaticPageLayoutProps {
 
 export function StaticPageLayout({ title, tagline, children }: StaticPageLayoutProps) {
   return (
-    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-24">
-      <div className="max-w-3xl mx-auto">
-        <header className="mb-16 lg:mb-20 text-center">
+    <div className="editorial-container py-12 lg:py-20">
+      <div className="mx-auto max-w-3xl">
+        <header className="magazine-rule mb-12 py-8 text-center lg:mb-16">
           {tagline && (
-            <span className="text-[10px] uppercase tracking-[0.4em] text-brand font-bold mb-4 block">
+            <span className="section-kicker mb-5 block">
               {tagline}
             </span>
           )}
-          <h1 className="text-4xl lg:text-6xl font-serif font-bold text-un-text tracking-tight mb-8">
+          <h1 className="font-serif text-5xl font-black leading-none text-un-text lg:text-7xl">
             {title}
           </h1>
-          <div className="w-12 h-1 bg-brand mx-auto"></div>
         </header>
         
-        <div className="prose prose-invert prose-premium max-w-none">
+        <div className="prose-premium max-w-none">
           {children}
         </div>
       </div>

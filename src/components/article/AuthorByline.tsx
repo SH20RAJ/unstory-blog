@@ -12,7 +12,7 @@ interface AuthorBylineProps {
 
 export function AuthorByline({ author }: AuthorBylineProps) {
   return (
-    <div className="flex items-start space-x-4 p-6 rounded-lg bg-un-surface border border-un-border">
+    <div className="flex items-start gap-4 rounded-[6px] border border-un-border bg-un-paper p-5">
       <Link href={`/author/${author.slug}`} className="flex-shrink-0">
         {author.avatarUrl ? (
           <Image 
@@ -20,23 +20,23 @@ export function AuthorByline({ author }: AuthorBylineProps) {
             alt={author.name} 
             width={64} 
             height={64} 
-            className="rounded-full grayscale hover:grayscale-0 transition-all duration-300" 
+            className="rounded-full grayscale transition-all duration-300 hover:grayscale-0" 
           />
         ) : (
-          <div className="w-16 h-16 rounded-full bg-premium-border flex items-center justify-center text-xl font-serif font-bold text-un-muted">
+          <div className="flex h-14 w-14 items-center justify-center rounded-full bg-un-surface font-serif text-xl font-bold text-un-muted">
             {author.name.charAt(0)}
           </div>
         )}
       </Link>
       <div className="flex flex-col space-y-2">
-        <span className="text-[10px] uppercase tracking-[0.2em] text-brand font-bold">Written By</span>
+        <span className="text-[10px] font-black uppercase tracking-[0.2em] text-brand">Written By</span>
         <Link href={`/author/${author.slug}`}>
-          <h4 className="text-xl font-serif font-bold text-un-text hover:text-brand transition-colors">
+          <h4 className="font-serif text-xl font-bold text-un-text transition-colors hover:text-brand">
             {author.name}
           </h4>
         </Link>
         {author.bio && (
-          <p className="text-un-muted text-sm leading-relaxed max-w-lg">
+          <p className="max-w-lg text-sm leading-relaxed text-un-muted">
             {author.bio}
           </p>
         )}

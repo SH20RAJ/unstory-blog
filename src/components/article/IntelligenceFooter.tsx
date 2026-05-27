@@ -1,7 +1,5 @@
 import Link from "next/link";
-import { AuthorByline } from "./AuthorByline";
-import { Badge } from "@/components/ui/Badge";
-import { FileText, ShieldCheck, Info, Scale, ArrowRight } from "lucide-react";
+import { ArrowRight, Info, Scale, ShieldCheck } from "lucide-react";
 
 interface IntelligenceFooterProps {
   article: {
@@ -15,126 +13,97 @@ interface IntelligenceFooterProps {
   sources?: any[];
 }
 
-export function IntelligenceFooter({ article, author, sources = [] }: IntelligenceFooterProps) {
+export function IntelligenceFooter({ article, sources = [] }: IntelligenceFooterProps) {
+  const verification = article.factCheckStatus
+    ? article.factCheckStatus.replace(/_/g, " ").replace(/\b\w/g, (c: string) => c.toUpperCase())
+    : "Under Review";
+
   return (
-    <div className="mt-24 pt-24 border-t border-un-border space-y-20">
-      {/* Author Intelligence Box */}
-      <div className="space-y-8">
-        <div className="flex items-center gap-3">
-          <div className="w-1.5 h-6 bg-brand"></div>
-          <h3 className="text-2xl font-serif font-bold text-un-text">Analysis Authority</h3>
-        </div>
-        {author && <AuthorByline author={author} />}
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20">
-        {/* Verification & Trust */}
-        <div className="space-y-8">
-          <div className="flex items-center gap-3">
-            <div className="w-1.5 h-6 bg-brand"></div>
-            <h3 className="text-2xl font-serif font-bold text-un-text">Trust Signals</h3>
+    <div className="mt-16 space-y-12 border-t border-un-border pt-12">
+      <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
+        <section className="rounded-[6px] border border-un-border bg-un-paper p-6">
+          <div className="mb-6 flex items-center gap-3">
+            <ShieldCheck className="h-5 w-5 text-brand" />
+            <h3 className="section-kicker text-un-text">Trust Signals</h3>
           </div>
-          
-          <div className="p-8 bg-un-surface border border-un-border rounded-xl space-y-8">
-            <div className="grid grid-cols-2 gap-6">
-              <div className="space-y-2">
-                <span className="text-[10px] uppercase tracking-widest text-un-muted font-bold flex items-center gap-2">
-                  <ShieldCheck className="w-3 h-3 text-brand" /> Trust Score
-                </span>
-                <div className="text-3xl font-bold text-white">
-                  {article.trustScore != null && article.trustScore >= 70
-                    ? `${article.trustScore}%`
-                    : "Pending Review"}
-                </div>
-              </div>
-              <div className="space-y-2">
-                <span className="text-[10px] uppercase tracking-widest text-un-muted font-bold flex items-center gap-2">
-                  <Scale className="w-3 h-3 text-brand" /> Verification
-                </span>
-                <div className="text-sm font-bold text-brand uppercase tracking-widest">
-                  {article.factCheckStatus
-                    ? article.factCheckStatus.replace(/_/g, " ").replace(/\b\w/g, (c: string) => c.toUpperCase())
-                    : "Under Review"}
-                </div>
+
+          <div className="grid grid-cols-2 gap-6">
+            <div>
+              <span className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-un-muted">
+                <ShieldCheck className="h-3 w-3 text-brand" /> Trust Score
+              </span>
+              <div className="mt-2 font-serif text-3xl font-black text-un-text">
+                {article.trustScore != null && article.trustScore >= 70
+                  ? `${article.trustScore}%`
+                  : "Review"}
               </div>
             </div>
+            <div>
+              <span className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-un-muted">
+                <Scale className="h-3 w-3 text-brand" /> Verification
+              </span>
+              <div className="mt-3 text-xs font-black uppercase tracking-widest text-brand">
+                {verification}
+              </div>
+            </div>
+          </div>
 
-            <div className="space-y-4 pt-6 border-t border-un-border">
-              <p className="text-xs text-un-muted italic leading-relaxed">
-                This briefing has been prepared according to our rigorous <Link href="/fact-checking-policy" className="text-brand hover:underline">Fact-Checking Protocol</Link>. Any identified factual errors are subject to our <Link href="/corrections-policy" className="text-brand hover:underline">Corrections Policy</Link>.
+          <p className="mt-6 border-t border-un-border pt-5 text-xs leading-relaxed text-un-muted">
+            This briefing follows our <Link href="/fact-checking-policy" className="text-brand hover:underline">fact-checking protocol</Link>. Corrections are handled under our <Link href="/corrections-policy" className="text-brand hover:underline">corrections policy</Link>.
+          </p>
+
+          <div className="mt-5 flex flex-wrap gap-4">
+            <Link href="/editorial-policy" className="inline-flex items-center gap-1 text-[10px] font-black uppercase tracking-widest text-un-muted transition-colors hover:text-brand">
+              Editorial Standards <ArrowRight className="h-3 w-3" />
+            </Link>
+            <Link href="/methodology" className="inline-flex items-center gap-1 text-[10px] font-black uppercase tracking-widest text-un-muted transition-colors hover:text-brand">
+              Methodology <ArrowRight className="h-3 w-3" />
+            </Link>
+          </div>
+        </section>
+
+        <section className="rounded-[6px] border border-un-border bg-un-paper p-6">
+          <div className="mb-6 flex items-center gap-3">
+            <Info className="h-5 w-5 text-brand" />
+            <h3 className="section-kicker text-un-text">Sourcing</h3>
+          </div>
+
+          {sources.length > 0 ? (
+            <ul className="space-y-4">
+              {sources.map((source, i) => (
+                <li key={i} className="group flex items-start gap-4">
+                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[4px] border border-un-border bg-un-bg text-[10px] font-black text-brand">
+                    {i + 1}
+                  </div>
+                  <div className="space-y-1">
+                    <a
+                      href={source.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="block text-sm font-bold text-un-text transition-colors group-hover:text-brand"
+                    >
+                      {source.name}
+                    </a>
+                    <p className="text-[10px] font-black uppercase tracking-widest text-un-muted">
+                      Primary source
+                    </p>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <div className="rounded-[6px] border border-dashed border-un-border bg-un-bg p-5">
+              <p className="text-center font-serif text-sm italic leading-6 text-un-muted">
+                Source notes are reviewed against our editorial methodology before publication.
               </p>
-              <div className="flex flex-wrap gap-4 pt-2">
-                <Link href="/editorial-policy" className="text-[10px] uppercase tracking-widest text-un-muted hover:text-white transition-colors flex items-center gap-1 font-bold">
-                  Editorial Standards <ArrowRight className="w-3 h-3" />
-                </Link>
-                <Link href="/methodology" className="text-[10px] uppercase tracking-widest text-un-muted hover:text-white transition-colors flex items-center gap-1 font-bold">
-                  Research Methodology <ArrowRight className="w-3 h-3" />
-                </Link>
-              </div>
-
-              {/* YMYL Disclaimer */}
-              <div className="pt-6 border-t border-un-border">
-                <p className="text-[10px] text-un-muted italic leading-relaxed">
-                  <strong className="not-italic">Disclaimer:</strong> This content is for informational and educational purposes only and does not constitute financial, legal, or medical advice. Always consult qualified professionals before making financial or legal decisions. See our <Link href="/editorial-policy" className="text-brand hover:underline">Editorial Policy</Link> for details.
-                </p>
-              </div>
-              <div className="p-4 bg-brand/5 border border-brand/10 rounded-lg">
-                <p className="text-xs text-un-muted leading-relaxed">
-                  <strong className="text-un-text">Disclaimer:</strong> This content is for informational and educational purposes only and does not constitute financial, legal, medical, or investment advice. Always consult qualified professionals before making decisions. See our <Link href="/editorial-policy" className="text-brand hover:underline">Editorial Policy</Link>.
-                </p>
-              </div>
             </div>
-          </div>
-        </div>
-
-        {/* Intelligence Sources */}
-        <div className="space-y-8">
-          <div className="flex items-center gap-3">
-            <div className="w-1.5 h-6 bg-brand"></div>
-            <h3 className="text-2xl font-serif font-bold text-un-text">Intelligence Sourcing</h3>
-          </div>
-
-          <div className="space-y-6">
-            {sources.length > 0 ? (
-              <ul className="space-y-4">
-                {sources.map((source, i) => (
-                  <li key={i} className="flex items-start gap-4 group">
-                    <div className="w-8 h-8 rounded bg-un-bg border border-un-border flex items-center justify-center text-[10px] text-brand font-bold shrink-0">
-                      {i + 1}
-                    </div>
-                    <div className="space-y-1">
-                      <a 
-                        href={source.url} 
-                        target="_blank" 
-                        rel="noopener noreferrer"
-                        className="text-sm font-bold text-un-text group-hover:text-brand transition-colors block"
-                      >
-                        {source.name}
-                      </a>
-                      <p className="text-[10px] uppercase tracking-widest text-un-muted">
-                        Primary Intelligence Source
-                      </p>
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <div className="p-6 bg-un-bg/30 border border-un-border border-dashed rounded-xl">
-                <p className="text-xs text-un-muted font-serif italic text-center">
-                  Sources for this briefing are being compiled and verified. Our editorial team reviews all sources according to our <Link href="/fact-checking-policy" className="text-brand hover:underline">Fact-Checking Protocol</Link>.
-                </p>
-              </div>
-            )}
-            
-            <div className="pt-4">
-              <Link href="/methodology" className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-brand hover:text-white transition-colors">
-                <Info className="w-3 h-3" />
-                How we source intelligence
-              </Link>
-            </div>
-          </div>
-        </div>
+          )}
+        </section>
       </div>
+
+      <p className="border-t border-un-border pt-6 text-[10px] leading-relaxed text-un-muted">
+        <strong className="text-un-text">Disclaimer:</strong> This content is for informational and educational purposes only and does not constitute financial, legal, medical, or investment advice. Always consult qualified professionals before making decisions.
+      </p>
     </div>
   );
 }

@@ -27,11 +27,9 @@ export function FeaturedArticle({ article }: FeaturedArticleProps) {
   const { title, slug, subtitle, excerpt, publishedAt, category, heroImageUrl, author } = article;
 
   return (
-    <div className="relative group overflow-hidden rounded-xl premium-border bg-un-surface">
-      <div className="grid grid-cols-1 lg:grid-cols-2">
-        {/* Content Side */}
-        <div className="p-8 lg:p-12 flex flex-col justify-center order-2 lg:order-1">
-          <div className="space-y-6">
+    <article className="group grid grid-cols-1 gap-8 border-y border-un-border py-8 lg:grid-cols-12 lg:gap-10 lg:py-10">
+      <div className="order-2 flex flex-col justify-center lg:order-1 lg:col-span-5">
+        <div className="space-y-6">
             {category && (
               <Link href={`/category/${category.slug}`}>
                 <Badge variant="premium">{category.name}</Badge>
@@ -39,55 +37,59 @@ export function FeaturedArticle({ article }: FeaturedArticleProps) {
             )}
             
             <Link href={`/article/${slug}`} className="block">
-              <h2 className="text-4xl lg:text-5xl xl:text-6xl font-serif font-bold text-un-text leading-[1.1] group-hover:text-brand transition-colors">
+              <h2 className="headline-balance font-serif text-4xl font-black leading-[0.98] text-un-text transition-colors group-hover:text-brand sm:text-5xl xl:text-6xl">
                 {title}
               </h2>
             </Link>
 
             {subtitle && (
-              <p className="text-xl lg:text-2xl font-serif text-brand/90 italic">
+              <p className="border-l-2 border-brand pl-5 font-serif text-xl leading-8 text-un-accent lg:text-2xl">
                 {subtitle}
               </p>
             )}
 
             {excerpt && (
-              <p className="text-un-muted text-lg leading-relaxed max-w-xl">
+              <p className="max-w-xl text-base leading-7 text-un-muted lg:text-lg">
                 {excerpt}
               </p>
             )}
 
-            <div className="pt-4 flex items-center space-x-6">
+            <div className="flex flex-wrap items-center gap-5 pt-2">
               {author && (
-                <div className="flex items-center space-x-3">
+                <div className="flex items-center gap-3">
                   {author.avatarUrl ? (
-                    <Image src={author.avatarUrl} alt={author.name} width={40} height={40} className="rounded-full" />
+                    <Image src={author.avatarUrl} alt={author.name} width={36} height={36} className="rounded-full" />
                   ) : (
-                    <div className="w-10 h-10 rounded-full bg-premium-border flex items-center justify-center text-xs font-bold text-un-muted">
+                    <div className="flex h-9 w-9 items-center justify-center rounded-full bg-un-surface text-xs font-black text-un-muted">
                       {author.name.charAt(0)}
                     </div>
                   )}
-                  <span className="text-sm font-medium text-un-text">{author.name}</span>
+                  <span className="text-[10px] font-black uppercase tracking-[0.18em] text-un-text">{author.name}</span>
                 </div>
               )}
-              <ArticleMeta date={publishedAt} className="text-base" />
+              <ArticleMeta date={publishedAt} />
             </div>
-          </div>
         </div>
-
-        {/* Image Side */}
-        <Link href={`/article/${slug}`} className="relative aspect-square lg:aspect-auto h-full overflow-hidden order-1 lg:order-2">
-          {heroImageUrl ? (
-            <img
-              src={heroImageUrl}
-              alt={title}
-              className="object-cover w-full h-full transition-transform duration-700 group-hover:scale-105"
-            />
-          ) : (
-            <ImagePlaceholder text="UNSTORY FEATURED" />
-          )}
-          <div className="absolute inset-0 bg-gradient-to-t from-premium-dark/60 to-transparent lg:hidden" />
-        </Link>
       </div>
-    </div>
+
+      <Link href={`/article/${slug}`} className="relative order-1 aspect-[16/10] overflow-hidden rounded-[6px] bg-un-surface lg:order-2 lg:col-span-7 lg:aspect-[16/9]">
+        {heroImageUrl ? (
+          <img
+            src={heroImageUrl}
+            alt={title}
+            className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+          />
+        ) : (
+          <ImagePlaceholder text="UNSTORY" />
+        )}
+      </Link>
+
+      <div className="order-3 hidden border-t border-un-border pt-5 lg:col-span-12 lg:grid lg:grid-cols-3 lg:gap-8">
+        <p className="text-xs font-black uppercase tracking-[0.22em] text-un-muted">The Lead Story</p>
+        <p className="col-span-2 text-sm leading-6 text-un-muted">
+          A high-signal briefing selected for its impact across capital, technology, and operating strategy.
+        </p>
+      </div>
+    </article>
   );
 }

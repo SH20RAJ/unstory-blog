@@ -13,30 +13,30 @@ export const metadata: Metadata = {
 
 export default function NotFound() {
   return (
-    <div className="min-h-[70vh] flex flex-col items-center justify-center p-8 text-center max-w-2xl mx-auto space-y-8">
+    <div className="editorial-container flex min-h-[70vh] flex-col items-center justify-center p-8 text-center">
       <div className="space-y-4">
         <Badge variant="premium">404 Intelligence Missing</Badge>
-        <h1 className="text-4xl lg:text-6xl font-serif font-bold text-un-text tracking-tight">
+        <h1 className="font-serif text-5xl font-black leading-none text-un-text lg:text-7xl">
           This briefing does not exist.
         </h1>
-        <p className="text-un-muted text-lg font-serif italic">
+        <p className="mx-auto max-w-2xl font-serif text-xl leading-8 text-un-accent">
           The intelligence you are looking for may have been archived, moved, or never existed in this dimension.
         </p>
       </div>
 
       <Link
         href="/"
-        className="bg-un-text text-un-bg px-10 py-4 font-bold uppercase tracking-widest text-xs hover:bg-brand transition-all shadow-xl"
+        className="mt-8 rounded-[4px] bg-un-text px-8 py-3.5 text-xs font-black uppercase tracking-[0.22em] text-un-bg transition-colors hover:bg-brand"
       >
         Explore Active Intelligence
       </Link>
       
-      <div className="pt-12 grid grid-cols-2 sm:grid-cols-4 gap-8 w-full">
+      <div className="grid w-full max-w-lg grid-cols-2 gap-8 pt-12 sm:grid-cols-4">
         {['Wealth', 'AI', 'Power', 'Business'].map((cat) => (
           <Link 
             key={cat} 
             href={`/category/${cat.toLowerCase()}`}
-            className="text-[10px] uppercase tracking-[0.2em] text-un-muted hover:text-brand transition-colors font-bold"
+            className="text-[10px] font-black uppercase tracking-[0.2em] text-un-muted transition-colors hover:text-brand"
           >
             {cat}
           </Link>

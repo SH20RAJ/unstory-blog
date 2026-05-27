@@ -56,15 +56,15 @@ export default function AboutPage() {
           <a 
             key={item.href} 
             href={item.href}
-            className="p-6 bg-un-surface border border-un-border hover:border-brand transition-all group"
+            className="group border border-un-border bg-un-paper p-6 transition-all hover:border-brand"
           >
-            <span className="text-xs uppercase tracking-widest text-un-muted group-hover:text-white font-bold">{item.label}</span>
-            <div className="mt-2 text-brand text-xs">Read Standards →</div>
+            <span className="text-xs font-black uppercase tracking-widest text-un-muted group-hover:text-un-text">{item.label}</span>
+            <div className="mt-2 text-xs text-brand">Read Standards</div>
           </a>
         ))}
       </div>
 
-      <div className="p-8 bg-un-surface border border-un-border rounded-xl space-y-6">
+      <div className="space-y-6 rounded-[6px] border border-un-border bg-un-paper p-8">
         <h2 className="text-2xl text-un-text font-serif font-bold">Contact & Ownership</h2>
         <div className="space-y-4 text-un-muted">
           <p>

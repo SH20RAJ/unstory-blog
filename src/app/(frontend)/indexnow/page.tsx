@@ -70,38 +70,38 @@ export default function IndexNowPage() {
   };
 
   return (
-    <div className="container mx-auto px-4 py-24 max-w-2xl space-y-12">
-      <div className="space-y-4 text-center">
+    <div className="editorial-container max-w-2xl space-y-12 py-20">
+      <div className="magazine-rule space-y-4 py-8 text-center">
         <Badge variant="premium">IndexNow Management</Badge>
-        <h1 className="text-5xl font-serif font-bold text-un-text">Instant Indexing</h1>
-        <p className="text-un-muted text-lg">
+        <h1 className="font-serif text-5xl font-black leading-none text-un-text">Instant Indexing</h1>
+        <p className="text-lg text-un-muted">
           Submit your content directly to search engines for immediate crawling and indexing.
         </p>
       </div>
 
-      <div className="premium-card p-8 space-y-6">
+      <div className="premium-card space-y-6 p-8">
         <div className="space-y-2">
-          <label className="text-sm font-bold uppercase tracking-widest text-un-text">Manual Submission</label>
+          <label className="text-sm font-black uppercase tracking-widest text-un-text">Manual Submission</label>
           <textarea
-            className="w-full h-48 p-4 bg-un-surface border border-un-border rounded-none focus:border-brand outline-none transition-colors font-mono text-sm"
+            className="h-48 w-full rounded-[4px] border border-un-border bg-un-bg p-4 font-mono text-sm outline-none transition-colors focus:border-brand"
             placeholder="https://unstory.app/article/example-1&#10;https://unstory.app/article/example-2"
             value={urls}
             onChange={(e) => setUrls(e.target.value)}
           />
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <button
             onClick={submitManual}
             disabled={loading}
-            className="bg-black text-white px-6 py-4 font-bold hover:bg-brand transition-colors disabled:opacity-50"
+            className="rounded-[4px] bg-un-text px-6 py-4 text-xs font-black uppercase tracking-[0.18em] text-un-bg transition-colors hover:bg-brand disabled:opacity-50"
           >
             {loading ? "Submitting..." : "Submit Manual URLs"}
           </button>
           <button
             onClick={submitAll}
             disabled={loading}
-            className="border-2 border-un-text text-un-text px-6 py-4 font-bold hover:bg-un-text hover:text-white transition-all disabled:opacity-50"
+            className="rounded-[4px] border border-un-text px-6 py-4 text-xs font-black uppercase tracking-[0.18em] text-un-text transition-colors hover:bg-un-text hover:text-un-bg disabled:opacity-50"
           >
             {loading ? "Fetching..." : "Submit All Articles"}
           </button>
@@ -124,7 +124,7 @@ export default function IndexNowPage() {
               }
             }}
             disabled={loading}
-            className="sm:col-span-2 border-2 border-brand text-brand px-6 py-4 font-bold hover:bg-brand hover:text-white transition-all disabled:opacity-50 uppercase tracking-widest text-xs"
+            className="rounded-[4px] border border-brand px-6 py-4 text-xs font-black uppercase tracking-[0.18em] text-brand transition-colors hover:bg-brand hover:text-white disabled:opacity-50 sm:col-span-2"
           >
             {loading ? "Syncing..." : "Fetch & Submit from Sitemap.xml"}
           </button>

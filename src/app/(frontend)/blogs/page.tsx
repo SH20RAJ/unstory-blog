@@ -44,18 +44,18 @@ export default async function BlogsPage({ searchParams }: BlogsPageProps) {
   const totalPages = Math.ceil(totalCount / limit);
 
   return (
-    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-24">
-      <header className="mb-16 space-y-6">
+    <div className="editorial-container py-12 lg:py-20">
+      <header className="magazine-rule mb-12 py-8 lg:mb-16">
         <Badge variant="premium">Intelligence Archive</Badge>
-        <h1 className="text-4xl lg:text-6xl font-serif font-bold text-un-text tracking-tight">
+        <h1 className="mt-6 font-serif text-5xl font-black leading-none text-un-text lg:text-7xl">
           All Briefings
         </h1>
-        <p className="text-un-muted text-lg font-serif italic max-w-2xl">
+        <p className="mt-5 max-w-2xl font-serif text-xl leading-8 text-un-accent lg:text-2xl">
           A comprehensive repository of decrypted internet intelligence, sorted by strategic relevance.
         </p>
       </header>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-12">
+      <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
         {articles.map((article: any) => (
           <ArticleCard key={article.id} article={article} />
         ))}
@@ -63,7 +63,7 @@ export default async function BlogsPage({ searchParams }: BlogsPageProps) {
 
       {articles.length === 0 && (
         <div className="py-24 text-center">
-          <p className="text-un-muted font-serif italic text-xl">
+          <p className="font-serif text-xl italic text-un-muted">
             No intelligence briefings found in this sector.
           </p>
         </div>

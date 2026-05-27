@@ -47,10 +47,10 @@ export default function AdvertisePage() {
           </ul>
         </section>
 
-        <div className="premium-card p-12 text-center bg-un-bg border-brand/20">
+        <div className="premium-card border-brand/30 bg-un-paper p-10 text-center">
           <h3 className="text-2xl font-serif text-un-text mb-6">Ready to collaborate?</h3>
           <p className="text-un-muted mb-8">Download our media kit or request a consultation.</p>
-          <a href="mailto:advertise@unstory.app" className="inline-block px-12 py-4 bg-brand text-premium-dark font-bold uppercase tracking-widest text-sm rounded-lg hover:bg-brand/90 transition-all">
+          <a href="mailto:advertise@unstory.app" className="inline-block rounded-[4px] bg-brand px-10 py-3.5 text-xs font-black uppercase tracking-[0.22em] text-white transition-colors hover:bg-un-accent">
             Contact Partnerships
           </a>
         </div>
