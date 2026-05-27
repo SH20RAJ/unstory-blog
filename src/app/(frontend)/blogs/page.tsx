@@ -15,6 +15,7 @@ export const metadata: Metadata = {
     url: `${SITE_CONFIG.url}/blogs`,
     siteName: SITE_CONFIG.name,
   },
+  robots: { index: true, follow: true },
 };
 
 export const dynamic = "force-dynamic";

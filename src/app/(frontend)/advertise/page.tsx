@@ -12,6 +12,7 @@ export const metadata: Metadata = {
     url: `${SITE_CONFIG.url}/advertise`,
     siteName: SITE_CONFIG.name,
   },
+  robots: { index: true, follow: true },
 };
 
 export default function AdvertisePage() {

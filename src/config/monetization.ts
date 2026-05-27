@@ -2,60 +2,51 @@
 // Unstory.app — Monetization Configuration
 // ============================================
 
-/** Affiliate disclosure text shown on commercial articles */
-export const AFFILIATE_DISCLOSURE =
-  "Unstory may earn a commission when readers choose products or services through our links. We only include products relevant to the article. This does not influence our editorial independence.";
-
-/** Categories that support affiliate monetization */
-export const AFFILIATABLE_CATEGORIES = [
+/** Categories that are safe for affiliate content */
+export const MONETIZABLE_CATEGORIES = [
   "ai",
   "business",
   "wealth",
   "cybersecurity",
-  "skills",
+  "startups",
+  "tools",
   "lifestyle",
-  "trends",
+  "travel",
+  "gadgets",
 ] as const;
 
-/** Categories where affiliate links should NOT appear (YMYL sensitive) */
-export const BLOCKED_AFFILIATE_CATEGORIES = [
+/** Standard affiliate disclosure text */
+export const AFFILIATE_DISCLOSURE =
+  "Unstory may earn a commission when readers choose products or services through our links. We only include products relevant to the article topic and our editorial judgment is never influenced by partnerships.";
+
+/** Categories where monetization should be extra careful */
+export const SENSITIVE_MONETIZATION_CATEGORIES = [
+  "investing",
+  "insurance",
+  "banking",
   "politics",
   "geopolitics",
-  "regulation",
+  "health",
+  "longevity",
 ] as const;
 
-/** High-intent topic to monetization model mapping */
-export const HIGH_INTENT_TOPIC_MAP: Record<string, string[]> = {
-  "ai-tools": ["affiliate", "sponsored"],
-  "saas": ["affiliate", "sponsored"],
-  "cybersecurity": ["affiliate", "lead_gen"],
-  "credit-cards": ["affiliate"],
-  "insurance": ["affiliate", "lead_gen"],
-  "investing": ["newsletter"],
-  "real-estate": ["lead_gen"],
-  "hosting": ["affiliate"],
-  "productivity": ["affiliate"],
-  "accounting": ["affiliate"],
-  "legal-tools": ["affiliate", "lead_gen"],
-  "crm": ["affiliate"],
-  "password-managers": ["affiliate"],
+/** High-intent topic mapping for commercial content */
+export const HIGH_INTENT_TOPICS: Record<string, string[]> = {
+  "ai": ["best ai tools", "ai software comparison", "ai for business", "chatgpt alternatives"],
+  "business": ["best crm", "business software", "saas tools", "startup tools"],
+  "wealth": ["credit cards", "investment platforms", "wealth management", "budgeting tools"],
+  "cybersecurity": ["vpn", "password manager", "security tools", "antivirus"],
+  "startups": ["founding tools", "startup legal", "business insurance", "incorporation"],
 } as const;
 
-/** High-CPC keyword targets for content planning */
-export const HIGH_CPC_KEYWORDS = [
-  "best business insurance for startups",
-  "best CRM software for small business",
-  "best cybersecurity tools for founders",
-  "best premium credit cards for entrepreneurs",
-  "best accounting software for small business",
-  "best AI tools for startup founders",
-  "best cloud hosting for startups",
-  "best password managers for business",
-  "best legal tools for startups",
-  "best productivity tools for founders",
-  "business credit card comparison",
-  "startup insurance guide",
-  "founder financial planning",
-  "enterprise SaaS reviews",
-  "B2B software comparison",
-] as const;
+/** AdSense configuration */
+export const ADSENSE_CONFIG = {
+  clientId: "ca-pub-1828915420581549",
+  slots: {
+    top: process.env.NEXT_PUBLIC_ADSENSE_SLOT_TOP || "",
+    midArticle: process.env.NEXT_PUBLIC_ADSENSE_SLOT_MID_ARTICLE || "",
+    afterArticle: process.env.NEXT_PUBLIC_ADSENSE_SLOT_AFTER_ARTICLE || "",
+    sidebar: process.env.NEXT_PUBLIC_ADSENSE_SLOT_SIDEBAR || "",
+    archive: process.env.NEXT_PUBLIC_ADSENSE_SLOT_ARCHIVE || "",
+  },
+} as const;

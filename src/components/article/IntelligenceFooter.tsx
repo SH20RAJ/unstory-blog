@@ -121,7 +121,7 @@ export function IntelligenceFooter({ article, author, sources = [] }: Intelligen
             ) : (
               <div className="p-6 bg-un-bg/30 border border-un-border border-dashed rounded-xl">
                 <p className="text-xs text-un-muted font-serif italic text-center">
-                Sources for this briefing are being compiled and verified. Our editorial team reviews all sources according to our <Link href="/fact-checking-policy" className="text-brand hover:underline">Fact-Checking Protocol</Link>.
+                  Sources for this briefing are being compiled and verified. Our editorial team reviews all sources according to our <Link href="/fact-checking-policy" className="text-brand hover:underline">Fact-Checking Protocol</Link>.
                 </p>
               </div>
             )}

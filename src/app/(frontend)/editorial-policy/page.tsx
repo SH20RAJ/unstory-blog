@@ -6,12 +6,14 @@ export const metadata: Metadata = {
   title: "Editorial Policy — Unstory",
   description: "Our standards for strategic intelligence, sourcing, and reporting integrity.",
   alternates: { canonical: `${SITE_CONFIG.url}/editorial-policy` },
+  alternates: { canonical: `${SITE_CONFIG.url}/editorial-policy` },
   openGraph: {
     title: "Editorial Policy",
     description: "Our standards for strategic intelligence, sourcing, and reporting integrity.",
     url: `${SITE_CONFIG.url}/editorial-policy`,
     siteName: SITE_CONFIG.name,
   },
+  robots: { index: true, follow: true },
 };
 
 export default function EditorialPolicy() {

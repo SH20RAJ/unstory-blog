@@ -12,6 +12,7 @@ export const metadata: Metadata = {
     url: `${SITE_CONFIG.url}/privacy`,
     siteName: SITE_CONFIG.name,
   },
+  robots: { index: true, follow: true },
 };
 
 export default function PrivacyPage() {
